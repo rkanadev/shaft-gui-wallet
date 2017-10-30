@@ -1,0 +1,5 @@
+node_modules
+shaft-gui-wallet-ui/node_modules
+shaft-gui-wallet-ui/dist
+.idea
+*.iml
