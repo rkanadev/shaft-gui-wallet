@@ -1,0 +1,9 @@
+{
+  "geth": {
+    "linux": {
+      "x86_64": {
+        "latest": "https://github.com/shaftsh/shaft/releases/download/1.0/geth_linux"
+      }
+    }
+  }
+}
