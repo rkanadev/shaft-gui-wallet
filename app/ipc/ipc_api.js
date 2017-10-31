@@ -3,9 +3,7 @@ const electron = require('electron');
 const ipcMain = require('electron').ipcMain;
 const logger = require('../util/logger').getLogger('IPC_Api');
 const web3service = require('../service/web3service');
-
-let api = {};
-
+const BigNumber = require('bignumber.js');
 
 const IPCRequestsMap = {
     init: {
@@ -37,7 +35,7 @@ electron.ipcMain.on('web3-req-channel', (event, arg) => {
         logger.silly('Message to web3-res-channel:' + JSON.stringify(resultBody));
         event.sender.send('web3-res-channel', resultBody);
     }, (error) => {
-        logger.error('Unable to process process request', error);
+        logger.error('Unable to process process request: ' + error);
         let resultBody = {id: arg.id, result: null, error: error};
         event.sender.send('web3-res-channel', resultBody);
     });
@@ -119,9 +117,48 @@ function getAccounts() {
             if (err) {
                 resolve([]);
             } else {
-                return resolve(accounts);
+                resolve(accounts);
             }
         });
+    });
+}
+
+function getBalance(address) {
+    return new Promise((resolve,reject) => {
+        let web3 = web3service.getWeb3();
+
+        if (!web3) {
+            reject()
+        }
+
+        web3.eth.getBalance(address, function (err, balance) {
+            if (err) {
+                reject(err);
+            } else {
+                let result = balance.toString(10);
+                resolve(result);
+            }
+        });
+    });
+}
+
+function newAccount(password) {
+    return new Promise((resolve,reject) => {
+        let web3 = web3service.getWeb3();
+
+        if (!web3) {
+            reject('web3 is null')
+        }
+
+
+/*        web3.eth.personal.newAccount(password, function (err, balance) {
+            if (err) {
+                reject(err);
+            } else {
+                let result = balance.toString(10);
+                resolve(result);
+            }
+        });*/
     });
 }
 
@@ -148,6 +185,22 @@ function requestDecoder(data) {
                 getAccounts().then((result) => {
                     resolve(result);
                 });
+                break;
+            case 'get_balance':
+                if(!data.params) {
+                    reject('No params')
+                }
+                getBalance(data.params).then((result) => {
+                    resolve(result);
+                }, rej => reject(rej));
+                break;
+            case 'new_account':
+                if(!data.params) {
+                    reject('No params')
+                }
+                newAccount(data.params).then((result) => {
+                    resolve(result);
+                }, rej => reject(rej));
                 break;
             default:
                 logger.error('Could not find suitable method for this request');

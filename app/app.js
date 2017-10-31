@@ -70,11 +70,16 @@ function initNode() {
     } else {
         logger.debug('IPC file does not exists, trying to start our own node');
         let proc = null;
-        if(appConfig.testnet) {
-            proc = spawn(homeDir + shaftDir + binariesDir + '/geth_linux', ['--testnet']);
-        }else {
-            proc = spawn(homeDir + shaftDir + binariesDir + '/geth_linux');
+        let args = [];
+
+        if (appConfig.testnet) {
+            args.push('--testnet')
         }
+        if (appConfig.rpc) {
+            args.push('--rpc')
+        }
+
+        proc = spawn(homeDir + shaftDir + binariesDir + '/geth_linux', args);
 
         // node has a problem starting
         proc.once('error', (err) => {

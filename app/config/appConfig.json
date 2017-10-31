@@ -2,5 +2,6 @@
   "log": {
     "level": "silly"
   },
-  "testnet" : true
+  "testnet" : true,
+  "rpc" : true
 }
