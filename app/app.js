@@ -7,6 +7,9 @@ const shaftDir = '/.shaft-gui';
 const binariesDir = '/binaries';
 const builds = require('./config/builds.json');
 const spawn = require('child_process').spawn;
+const ipc_api = require('./ipc/ipc_api');
+const web3service = require('./service/web3service');
+const appConfig = require('./config/appConfig.json');
 
 function init() {
     logger.info('SHAFT GUI Wallet started v0.01');
@@ -38,6 +41,11 @@ function init() {
             logger.silly('Binaries dir exists');
             checkBinary();
             initNode();
+            //Delaying startup
+            //Todo connect after ipc file creating
+            setTimeout(function () {
+                web3service.init(appConfig.testnet ? homeDir + '/.shaft/testnet/geth.ipc' : homeDir + '/.shaft/geth.ipc');
+            }, 5000)
         } else {
             logger.silly('Binaries dir does not exists, creating');
             fs.mkdir(homeDir + shaftDir + binariesDir, function (err) {
@@ -54,13 +62,19 @@ function init() {
 
 function initNode() {
     logger.info('Module node initializing started');
-    let IsIPCFileExists = fs.existsSync(homeDir + '/.shaft/testnet/geth.ipc');
+
+    let IsIPCFileExists = fs.existsSync(appConfig.testnet ? homeDir + '/.shaft/testnet/geth.ipc' : '/.shaft/geth.ipc');
 
     if (IsIPCFileExists) {
         logger.debug('IPC file found. Probably we already have running node in the system');
     } else {
         logger.debug('IPC file does not exists, trying to start our own node');
-        const proc = spawn(homeDir + shaftDir + binariesDir + '/geth_linux', ['--testnet', '--rpc', '--rpccorsdomain', 'http://127.0.0.1:4200', '--rpcapi', 'db,eth,net,web3,personal,miner']);
+        let proc = null;
+        if(appConfig.testnet) {
+            proc = spawn(homeDir + shaftDir + binariesDir + '/geth_linux', ['--testnet']);
+        }else {
+            proc = spawn(homeDir + shaftDir + binariesDir + '/geth_linux');
+        }
 
         // node has a problem starting
         proc.once('error', (err) => {

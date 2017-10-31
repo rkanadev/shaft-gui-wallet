@@ -25,15 +25,15 @@ function createWindow() {
     // and load the index.html of the app.
     mainWindow.loadURL("http://127.0.0.1:4200");
 
+/*
 
-    /*
         try {
             const web3 = new Web3(new Web3.providers.IpcProvider(homedir + '/.shaft/testnet/geth.ipc', net));
         }
         catch (e) {
             console.log(e.code);
         }
-    */
+*/
     //console.log(web3.isConnected());
 
 
@@ -73,24 +73,4 @@ electronApp.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-/*
-
-const IPCRequestsMap =  {
-    init : {
-        request: "init_request",
-        response: "init_response",
-        description: "Init IPC layer. At now, just responses with actual map of request-response"
-    },
-    closeApp : {
-        request: "close_app_request",
-        response: "close_app_response",
-        description: "Closing SHAFT-GUI"
-    }
-};
-
-
-electron.ipcMain.on(IPCRequestsMap.init.request, (event, arg) => {
-    //console.log('IPC: Request from client', event, arg);
-    event.sender.send(IPCRequestsMap.init.response, {map: IPCRequestsMap})
-});*/
 
