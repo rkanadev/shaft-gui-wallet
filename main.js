@@ -25,17 +25,6 @@ function createWindow() {
     // and load the index.html of the app.
     mainWindow.loadURL("http://127.0.0.1:4200");
 
-/*
-
-        try {
-            const web3 = new Web3(new Web3.providers.IpcProvider(homedir + '/.shaft/testnet/geth.ipc', net));
-        }
-        catch (e) {
-            console.log(e.code);
-        }
-*/
-    //console.log(web3.isConnected());
-
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {

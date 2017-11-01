@@ -2,9 +2,10 @@
   "name": "electron-quick-start",
   "version": "1.0.0",
   "description": "A minimal Electron application",
-  "main": "main.js",
+  "main": "./main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager . myApp --platform=linux --arch=x64 --app-version=0.1.0 --out=dist --ignore=dist"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -17,12 +18,13 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
+    "electron-builder": "^19.43.0",
     "electron": "~1.7.8"
   },
   "dependencies": {
     "bignumber.js": "^4.1.0",
-    "electron-promise-ipc": "0.0.4",
-    "reqeust": "^2.81.1",
+    "date-fns": "^1.29.0",
+    "request": "^2.81.1",
     "web3": "^0.18.4",
     "winston": "^3.0.0-rc1"
   }

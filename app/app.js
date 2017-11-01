@@ -1,6 +1,7 @@
 'use strict';
 const fs = require('fs');
 const request = require('request');
+const crypto = require('crypto');
 const logger = require('./util/logger').getLogger('App.js');
 const homeDir = process.env.HOME;
 const shaftDir = '/.shaft-gui';
@@ -32,7 +33,13 @@ function init() {
                 if (err) {
                     throw new Error('Could not create Shaft geth binaries dir [' + homeDir + shaftDir + binariesDir + ']');
                 }
-                downloadBinary();
+                downloadBinary().then(() => {
+                    logger.info("Successfully downloaded binaries");
+                    //starting node
+                    initNode();
+                }, error => {
+                    logger.error(error);
+                });
             })
         });
     } else {
@@ -52,7 +59,12 @@ function init() {
                 if (err) {
                     throw new Error('Could not create Shaft geth binaries dir [' + homeDir + shaftDir + binariesDir + ']');
                 }
-                downloadBinary();
+                downloadBinary().then(() => {
+                    logger.info('Binaries pulled from github, starting node')
+                    initNode();
+                }, err => {
+                    throw new Error(err)
+                });
             })
         }
     }
@@ -61,85 +73,103 @@ function init() {
 }
 
 function initNode() {
-    logger.info('Module node initializing started');
+    return new Promise((resolve, reject) => {
+        logger.info('Node initializing started');
+        let ipcPath = appConfig.testnet ? homeDir + '/.shaft/testnet/geth.ipc' : '/.shaft/geth.ipc';
+        let IsIPCFileExists = fs.existsSync(ipcPath);
+        logger.silly('Checking IPC file in' + ipcPath);
+        if (IsIPCFileExists) {
+            logger.debug('IPC file found. Probably we already have running node in the system');
+            resolve();
+        } else {
+            logger.debug('IPC file does not exists, trying to start our own node');
+            let proc = null;
+            let args = [];
 
-    let IsIPCFileExists = fs.existsSync(appConfig.testnet ? homeDir + '/.shaft/testnet/geth.ipc' : '/.shaft/geth.ipc');
+            if (appConfig.testnet) {
+                args.push('--testnet')
+            }
+            if (appConfig.rpc) {
+                args.push('--rpc')
+            }
+            //Check sha
+            let algo = 'sha256';
+            let shasum = crypto.createHash(algo);
+            let execPath = homeDir + shaftDir + binariesDir + '/geth_linux';
+            let s = fs.ReadStream(execPath);
+            s.on('data', function(d) { shasum.update(d); });
+            s.on('end', function() {
+                let d = shasum.digest('hex');
+                if(d !== builds.geth.linux.x86_64.latest.sha256){
+                    throw new Error('SHA256 hashsum test failed. Please, remove incorrect binary from ~/.shaft-gui/binaries');
+                }
+            });
 
-    if (IsIPCFileExists) {
-        logger.debug('IPC file found. Probably we already have running node in the system');
-    } else {
-        logger.debug('IPC file does not exists, trying to start our own node');
-        let proc = null;
-        let args = [];
+            proc = spawn(homeDir + shaftDir + binariesDir + '/geth_linux', args);
 
-        if (appConfig.testnet) {
-            args.push('--testnet')
+            // node has a problem starting
+            proc.once('error', (err) => {
+                logger.error('Node startup error', err);
+            });
+
+            // we need to read the buff to prevent node from not working
+            proc.stderr.pipe(
+                fs.createWriteStream(homeDir + shaftDir + '/' + ('node.log'), {flags: 'a'})
+            );
+
+            // when proc outputs data
+            proc.stdout.on('data', (data) => {
+                logger.silly('Got stdout data from node')
+            });
+
+            // when proc outputs data in stderr
+            proc.stderr.on('data', (data) => {
+                logger.silly('Got stderr data from node ' + data);
+            });
+            resolve()
+
         }
-        if (appConfig.rpc) {
-            args.push('--rpc')
-        }
-
-        proc = spawn(homeDir + shaftDir + binariesDir + '/geth_linux', args);
-
-        // node has a problem starting
-        proc.once('error', (err) => {
-            logger.error('Node startup error', err);
-        });
-
-        // we need to read the buff to prevent node from not working
-        proc.stderr.pipe(
-            fs.createWriteStream(homeDir + shaftDir + '/' + ('node.log'), {flags: 'a'})
-        );
-
-        // when proc outputs data
-        proc.stdout.on('data', (data) => {
-            logger.silly('Got stdout data from node');
-        });
-
-        // when proc outputs data in stderr
-        proc.stderr.on('data', (data) => {
-            logger.silly('Got stderr data from node ' + data);
-        });
-
-
-    }
+    });
 
 }
 
 function downloadBinary() {
-    logger.info('Downloading geth binary from ' + builds.geth.linux.x86_64.latest);
+    return new Promise((resolve, reject) => {
+        logger.info('Downloading geth binary from ' + builds.geth.linux.x86_64.latest.url);
 
-    let dest = homeDir + shaftDir + binariesDir + '/geth_linux';
-    let file = fs.createWriteStream(dest);
-    let sendReq = request.get(builds.geth.linux.x86_64.latest);
+        let dest = homeDir + shaftDir + binariesDir + '/geth_linux';
+        let file = fs.createWriteStream(dest);
+        let sendReq = request.get(builds.geth.linux.x86_64.latest.url);
 
-    // verify response code
-    sendReq.on('response', function (response) {
-        console.log(response.statusCode);
-        if (response.statusCode !== 200) {
-            logger.error('Could not download binary file from github, response status: ' + response.statusCode);
-            return new Error('Could not download binary file from github, response status: ' + response.statusCode);
-        }
-    });
+        // verify response code
+        sendReq.on('response', function (response) {
+            console.log(response.statusCode);
+            if (response.statusCode !== 200) {
+                logger.error('Could not download binary file from github, response status: ' + response.statusCode);
+                reject('Could not download binary file from github, response status: ' + response.statusCode);
+            }
+        });
 
-    // check for request errors
-    sendReq.on('error', function (err) {
-        fs.unlink(dest);
-        throw new Error('Could not download binary file: ' + err.message);
-    });
+        // check for request errors
+        sendReq.on('error', function (err) {
+            fs.unlink(dest);
+            reject('Could not download binary file: ' + err.message);
+        });
 
-    sendReq.pipe(file);
+        sendReq.pipe(file);
 
-    file.on('finish', function () {
-        logger.info('Successfully downloaded geth binary');
-        file.close();  // close() is async, call cb after close completes.
-        fs.chmodSync(homeDir + shaftDir + binariesDir + '/geth_linux', '0755');
-    });
+        file.on('finish', function () {
+            logger.info('Successfully downloaded geth binary');
+            file.close();  // close() is async, call cb after close completes.
+            fs.chmodSync(homeDir + shaftDir + binariesDir + '/geth_linux', '0755');
+            resolve();
+        });
 
 
-    file.on('error', function (err) { // Handle errors
-        fs.unlink(dest); // Delete the file async. (But we don't check the result)
-        throw new Error('Could not download binary file: ' + err.message);
+        file.on('error', function (err) { // Handle errors
+            fs.unlink(dest); // Delete the file async. (But we don't check the result)
+            reject('Could not download binary file: ' + err.message);
+        });
     });
 }
 

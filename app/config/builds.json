@@ -2,7 +2,10 @@
   "geth": {
     "linux": {
       "x86_64": {
-        "latest": "https://github.com/shaftsh/shaft/releases/download/1.0/geth_linux"
+        "latest": {
+          "url": "https://github.com/shaftsh/shaft/releases/download/1.0/geth_linux",
+          "sha256": "eececcf9389c8a35758ee6e6d46edfa2c5609bc34d6012707d31615bb6b6f8a7"
+        }
       }
     }
   }
