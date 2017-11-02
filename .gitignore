@@ -4,3 +4,4 @@ shaft-gui-wallet-ui/dist
 .idea
 *.iml
 package-lock.json
+electron-packager

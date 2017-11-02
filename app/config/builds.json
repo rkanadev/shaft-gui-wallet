@@ -1,10 +1,18 @@
 {
   "geth": {
     "linux": {
-      "x86_64": {
+      "x64": {
         "latest": {
           "url": "https://github.com/shaftsh/shaft/releases/download/1.0/geth_linux",
           "sha256": "eececcf9389c8a35758ee6e6d46edfa2c5609bc34d6012707d31615bb6b6f8a7"
+        }
+      }
+    },
+    "win": {
+      "x64": {
+        "latest": {
+          "url": "https://github.com/shaftsh/shaft/releases/download/1.0/geth.exe",
+          "sha256": "9b106763381b8ae760210354ab5283a9db90548c921a1d2304920c1d42c5301b"
         }
       }
     }
