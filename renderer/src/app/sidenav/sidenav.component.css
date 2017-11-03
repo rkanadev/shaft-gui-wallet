@@ -1,0 +1,36 @@
+.sidenav_container {
+  width:100%;
+  height: 100%;
+display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0;
+}
+.sidenav_container nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0;
+
+}
+
+.sidenav_container nav ul {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.sidenav_container nav ul li {
+  padding: 10px;
+  text-decoration: none;
+  color:black;
+  font-family: Roboto, serif;
+}
+
+.sidenav_container nav ul li a {
+  text-decoration: none;
+  color:black;
+  outline: none;
+  border: 0;
+  text-align: left;
+}

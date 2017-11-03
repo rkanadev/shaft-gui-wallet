@@ -1,0 +1,11 @@
+.home {
+  margin: 0 auto;
+  padding: 50px;
+  width:100%;
+  height: 100%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.accounts {
+  padding-top:10px;
+}

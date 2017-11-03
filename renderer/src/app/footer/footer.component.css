@@ -1,0 +1,27 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.logo {
+  width: 20px;
+}
+
+.footer-container {
+  position: relative;
+}
+
+.left-bar {
+  position: absolute;
+  left:0;
+  padding-left:20px;
+}
+
+.right-bar {
+  position: absolute;
+  right:0;
+  padding-right:20px;
+}
+

@@ -1,0 +1,33 @@
+<div class="send">
+  <div *ngIf="accounts.length > 0">
+    <form #sendForm="ngForm">
+      <mat-form-field>
+        <mat-select placeholder="Choose from" [(ngModel)]="from" name="from">
+          <mat-option *ngFor="let account of accounts" [value]="account">
+            {{account}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select placeholder="Choose to" [(ngModel)]="to" name="to">
+          <mat-option *ngFor="let account of accounts" [value]="account">
+            {{account}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Value" name="value" [(ngModel)]="value" type="number">
+      </mat-form-field>
+      <div>
+        <p>
+          <button (click)="openSendDialog()" mat-raised-button mat-button="primary" color="primary">Send
+          </button>
+        </p>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="accounts.length ==  0">
+    ==0
+  </div>
+</div>

@@ -1,0 +1,8 @@
+.send_dialog {
+  font-family: Roboto, sans-serif;
+}
+
+.send_dialog span{
+  font-size:0.9em;
+  padding-bottom: 20px;
+}

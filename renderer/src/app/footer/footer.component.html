@@ -1,0 +1,12 @@
+<div class="footer">
+  <mat-toolbar color="primary" class="footer-container">
+    <div class="left-bar">
+      <div *ngIf="syncing">Syncing</div>
+      <div *ngIf="!syncing">Not syncing</div>
+      <div>Block: {{getBlockNumber()}}</div>
+    </div>
+    <div class="right-bar">
+      Peers: {{getPeerCount()}}
+    </div>
+  </mat-toolbar>
+</div>

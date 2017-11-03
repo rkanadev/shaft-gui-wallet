@@ -1,0 +1,26 @@
+<div class="send_dialog">
+  <h1 mat-dialog-title *ngIf="!unlocking">Unlock account</h1>
+  <h1 mat-dialog-title *ngIf="unlocking">Confirm transaction</h1>
+  <div *ngIf="!unlocking" mat-dialog-content>
+    <span>Confirm the transaction, it cannot be undone after pushing it into the network.</span>
+    <p></p>
+    <mat-form-field>
+      <input id="password" type="password" matInput tabindex="1" placeholder="Enter password" value="Password"
+             [disabled]="unlocked" [(ngModel)]="password">
+    </mat-form-field>
+
+    <div *ngIf="passwordInvalid && !unlocking">
+      Cannot unlock account, wrong password. Try again.
+    </div>
+  </div>
+  <div *ngIf="unlocking"><mat-spinner [diameter]="70" style="margin:0 auto;padding 100px"></mat-spinner></div>
+  <div *ngIf="!unlocking" mat-dialog-actions>
+    <p>
+      <button *ngIf="unlocked" mat-button [mat-dialog-close]="password" tabindex="2" [disabled]="!password || unlocking">Push
+      </button>
+      <button *ngIf="!unlocked" mat-button tabindex="2" [disabled]="!password || unlocking" (click)="unlockAccount(data.from, password)">Unlock account</button>
+      <button mat-button (click)="onNoClick()" [disabled]="unlocking" tabindex="-1">No Thanks</button>
+    </p>
+  </div>
+
+</div>

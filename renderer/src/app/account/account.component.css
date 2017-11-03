@@ -1,0 +1,14 @@
+.account {
+  margin: 0 auto;
+  padding-top: 50px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+.heading {
+  width: 100%;
+  font-size: 1.4em;
+  padding: 10px;
+}

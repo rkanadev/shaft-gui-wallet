@@ -1,0 +1,51 @@
+.logo-label {
+  font-size: 1.3em;
+  font-weight: 300;
+  padding: 10px;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+  padding-right:10px;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.nav ul {
+  text-decoration: none;
+  list-style: none;
+  display: flex;
+  width: 100%;
+}
+
+.nav ul li {
+  padding: 10px;
+}
+
+.app-controls {
+  width: 100%;
+  height: 30px;
+  -webkit-app-region: drag
+}
+
+.app-controls nav {
+  padding-left: 50px;
+
+}
+
+.app-control-buttons {
+  -webkit-app-region: no-drag;
+  text-decoration: none;
+  color: white;
+}
+
+.exit-button {
+  -webkit-app-region: no-drag;
+  margin-left: auto;
+}
+
+.menu-button {
+  font-size: 1.3em;
+  -webkit-app-region: no-drag;
+}

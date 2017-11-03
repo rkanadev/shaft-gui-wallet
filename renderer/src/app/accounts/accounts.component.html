@@ -1,0 +1,23 @@
+<div class="accounts">
+  <div *ngIf="getAccountsAsArray().length === 0">You have not created accounts yet.</div>
+  <div *ngIf="getAccountsAsArray().length > 0" class="accounts_list">
+    <ul >
+      <li *ngFor="let account of getAccountsAsArray();let i = index">
+        <div>
+          <mat-card class="account_card" [routerLink]="['/account', account]">
+            <mat-card-title>#{{account.substr(2,8)}}</mat-card-title>
+            <mat-card-subtitle>{{this.accounts[account].balance / 1000000000000000000}} SHF</mat-card-subtitle>
+            <span>{{account.substr(0,16)}}...</span>
+          </mat-card>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <p>
+      <button (click)="openCreateAccountDialog()" mat-raised-button mat-button="primary" color="primary">Create
+        account
+      </button>
+    </p>
+  </div>
+</div>
