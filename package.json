@@ -1,21 +1,19 @@
 {
-  "name": "electron-quick-start",
+  "name": "shaft-gui-wallet",
   "version": "0.0.2",
-  "description": "A minimal Electron application",
+  "description": "Shaft GUI wallet",
   "main": "./main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --config build.json -l"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://code.shaft.sh/shaftsh/shaft",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "shaft",
+    "shaft-gui-wallet",
+    "cryptocurrency"
   ],
-  "author": "GitHub",
+  "author": "shaft.sh",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "~1.7.9",
