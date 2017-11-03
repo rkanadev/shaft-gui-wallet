@@ -5,3 +5,5 @@ shaft-gui-wallet-ui/dist
 *.iml
 package-lock.json
 electron-packager
+wwwRoot/
+dist/

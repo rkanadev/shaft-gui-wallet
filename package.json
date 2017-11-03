@@ -1,11 +1,11 @@
 {
   "name": "electron-quick-start",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "A minimal Electron application",
   "main": "./main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --config build.json -w"
+    "build": "electron-builder --config build.json -l"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -18,12 +18,15 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "~1.7.8",
+    "electron": "~1.7.9",
     "electron-builder": "^19.43.0"
   },
   "dependencies": {
     "bignumber.js": "^4.1.0",
     "date-fns": "^1.29.0",
+    "electron-log": "^2.2.11",
+    "electron-updater": "^2.14.0",
+    "http_server": "^1.0.12",
     "make-dir": "^1.1.0",
     "request": "^2.81.1",
     "web3": "^0.18.4",
