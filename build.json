@@ -1,0 +1,13 @@
+{
+  "appId": "shaft.sh.shaft-gui-wallet",
+  "win": {
+    "target": [
+      {
+        "target": "portable",
+        "arch": [
+          "x64"
+        ]
+      }
+    ]
+  }
+}

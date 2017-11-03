@@ -4,16 +4,12 @@ const LoggerFactory = require('../util/logger');
 const logger = LoggerFactory.getLogger('GethNodeService');
 const fs = require('fs');
 const crypto = require('crypto');
+const makeDir = require('make-dir');
 const appConfig = require('../config/appConfig.json');
 const request = require('request');
 const buildsConfig = require('../config/builds.json');
 const spawn = require("child_process").spawn;
 const platform = process.platform;
-let homeDir = null;
-let shaftGUIDir = null;
-let binariesDir = null;
-let executablePath = null;
-let buildUrl = null;
 const dirEnum = {'SHAFT_GUI': 'shaft_gui', 'BINARIES': 'binaries'};
 
 function createShaftGUIDir() {
@@ -122,7 +118,7 @@ function downloadBinary(url, destPath) {
  * Resolves if IPC file found or node successfully started. Reject on errors
  * @returns {Promise}
  */
-function startNode(ipcPath, execPath, sha256) {
+function startNode(ipcPath, execPath, sha256, nodeLogFile) {
     return new Promise((resolve, reject) => {
         let isIPCFileExists = fs.existsSync(ipcPath);
         logger.silly('Checking IPC file in' + ipcPath);
@@ -134,15 +130,19 @@ function startNode(ipcPath, execPath, sha256) {
             let args = [];
 
             if (appConfig.testnet) {
+                logger.info('Starting in network: testnet')
                 args.push('--testnet')
+            }else {
+                logger.info('Starting in network: mainnet')
             }
             if (appConfig.rpc) {
+                logger.info('With RPC enabled.')
                 args.push('--rpc')
             }
             //Check sha
             checkHashsumOfFile(execPath, sha256).then(() => {
                 proc = spawn(execPath, args);
-
+                logger.debug('Checksum is valid, starting node')
                 // node has a problem starting
                 proc.once('error', (err) => {
                     logger.error('Node startup error:' + err);
@@ -151,7 +151,7 @@ function startNode(ipcPath, execPath, sha256) {
 
                 // we need to read the buff to prevent node from not working
                 proc.stderr.pipe(
-                    fs.createWriteStream(homeDir + shaftGUIDir + '/' + ('node.log'), {flags: 'a'})
+                    fs.createWriteStream(nodeLogFile, {flags: 'a'})
                 );
 
                 // when proc outputs data
@@ -202,45 +202,56 @@ function onNodeStartError(err, reject) {
     reject(err);
 }
 
-function init() {
-    return new Promise((resolve, reject) => {
-        logger.info('Geth node service started up');
-        let platform = null;
-        let fileName = null;
-        let shaftDir = null;
-        let sha256 = null;
-        let logfile = null;
-        if (process.arch !== 'x64') {
-            reject('Sorry, unsupported architecture');
-        }
+function getIpcPath(paths, testnet) {
+    let ipcPath = paths.homeDir;
+    if (testnet) {
         if (isPlatformLinux()) {
-            platform = 'linux';
-            buildUrl = buildsConfig.geth[platform].x64.latest.url;
-            sha256 = buildsConfig.geth[platform].x64.latest.sha256
-            fileName = buildUrl.substring(buildUrl.lastIndexOf("/")).substr(1);
-            homeDir = process.env.HOME;
-            shaftDir = '/.shaft';
-            shaftGUIDir = '/.shaft-gui';
-            binariesDir = '/binaries';
-            executablePath = '/' + fileName;
-            logfile = '/shaft-gui.log';
+            ipcPath += paths.homeDir + paths.shaftDir + '/testnet' + '/geth.ipc';
         }
         if (isPlatformWindows()) {
-            platform = 'win';
-            buildUrl = buildsConfig.geth[platform].x64.latest.url;
-            sha256 = buildsConfig.geth[platform].x64.latest.sha256
-            fileName = buildUrl.substring(buildUrl.lastIndexOf("/"));
-            homeDir = process.env.APPDATA;
-            shaftDir = '\\SHAFT';
-            shaftGUIDir = '\\Shaft-GUI';
-            binariesDir = '\\binaries';
-            executablePath = '\\' + fileName;
-            logfile = '\\shaft-gui.log';
+            ipcPath += paths.homeDir + paths.shaftDir + '\\testnet' + '\\geth.ipc';
         }
+        return ipcPath;
+    } else {
+        if (isPlatformLinux()) {
+            ipcPath += paths.shaftDir + '/geth.ipc'
+        }
+        if (isPlatformWindows()) {
+            ipcPath += paths.shaftDir + '\\geth.ipc'
+        }
+        return ipcPath;
+    }
+}
+
+function init(paths) {
+    return new Promise((resolve, reject) => {
+        logger.info('Geth node service started up');
         if (!isPlatformWindows() && !isPlatformLinux()) {
             reject('Sorry, platform ' + platform + ' is unsupported')
         }
-        LoggerFactory.initFileLogger(homeDir + shaftGUIDir + logfile);
+        let isBinaryExist = checkBinaryExist(paths.homeDir + paths.shaftGUIDir + paths.binariesDir + paths.executablePath);
+        let execPath = paths.homeDir + paths.shaftGUIDir + paths.binariesDir + paths.executablePath;
+        let sha256 = paths.sha256;
+        let nodeLogFile = paths.homeDir + paths.shaftGUIDir + paths.nodeLogFile;
+        if (isBinaryExist) {
+            //TODO remove code duplication
+            let ipcPath = getIpcPath(paths, appConfig.testnet);
+            startNode(ipcPath, execPath, sha256, nodeLogFile).then(() => onNodeStarted(resolve), err => onNodeStartError(err, reject))
+        } else {
+            downloadBinary(paths.buildUrl, execPath).then(() => {
+                    if (isPlatformLinux()) {
+                        fs.chmodSync(execPath, '0755');
+                    }
+                    logger.info("Successfully downloaded build from" + buildUrl + " and placed it into "
+                        + execPath);
+                    let ipcPath = getIpcPath(paths, appConfig.testnet);
+                    startNode(ipcPath, execPath, sha256, nodeLogFile).then(() => onNodeStarted(resolve), err => onNodeStartError(err, reject));
+                }, (error) => {
+                    reject(error);
+                }
+            );
+        }
+        /*
         checkFolders().then(() => {
             if (appConfig.testnet) {
                 startNode(homeDir + shaftDir + '/testnet' + '/geth.ipc', homeDir + shaftGUIDir + binariesDir + executablePath, sha256).then(() => onNodeStarted(resolve), err => onNodeStartError(err, reject))
@@ -290,16 +301,22 @@ function init() {
                     reject(err)
                 })
             }
-        })
+        })*/
     })
 }
 
 function initPaths() {
+    let homeDir = null;
+    let shaftGUIDir = null;
+    let binariesDir = null;
+    let executablePath = null;
+    let buildUrl = null;
     let platform = null;
     let fileName = null;
     let shaftDir = null;
     let sha256 = null;
     let logfile = null;
+    let nodeLogFile = null;
     if (process.arch !== 'x64') {
         reject('Sorry, unsupported architecture');
     }
@@ -314,6 +331,7 @@ function initPaths() {
         binariesDir = '/binaries';
         executablePath = '/' + fileName;
         logfile = '/shaft-gui.log';
+        nodeLogFile = '/node.log'
     }
     if (isPlatformWindows()) {
         platform = 'win';
@@ -326,6 +344,7 @@ function initPaths() {
         binariesDir = '\\binaries';
         executablePath = '\\' + fileName;
         logfile = '\\shaft-gui.log';
+        nodeLogFile = '\\node.log'
     }
 
     return {
@@ -335,6 +354,11 @@ function initPaths() {
         fileName: fileName,
         homeDir: homeDir,
         shaftDir: shaftDir,
+        shaftGUIDir: shaftGUIDir,
+        binariesDir: binariesDir,
+        executablePath: executablePath,
+        logfile: logfile,
+        nodeLogFile: nodeLogFile
     }
 }
 
@@ -346,6 +370,27 @@ function isPlatformWindows() {
     return platform.indexOf("win") !== -1
 }
 
-module.exports = {
-    init: init
+function checkOrCreateFolders(paths) {
+    return new Promise((resolve, reject) => {
+        let isGUIdirExist = fs.existsSync(paths.homeDir + paths.shaftGUIDir);
+        let isBinariesDirExists = fs.existsSync(paths.homeDir + paths.shaftGUIDir + paths.binariesDir);
+        let path = paths.homeDir + paths.shaftGUIDir + paths.binariesDir;
+        if (!isGUIdirExist || !isBinariesDirExists) {
+            makeDir(path).then(() => {
+                logger.debug("Successfully created " + path + " folder.")
+                resolve()
+            }, err => {
+                logger.error(err);
+                reject(err)
+            })
+        } else {
+            resolve();
+        }
+    });
 }
+
+module.exports = {
+    checkOrCreateFolders: checkOrCreateFolders,
+    initPaths: initPaths,
+    init: init
+};

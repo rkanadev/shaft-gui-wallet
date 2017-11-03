@@ -2,7 +2,8 @@
 const fs = require('fs');
 const request = require('request');
 const crypto = require('crypto');
-const logger = require('./util/logger').getLogger('App.js');
+const loggerFactory = require('./util/logger');
+const logger = loggerFactory.getLogger('App.js');
 const homeDir = process.env.HOME;
 const shaftDir = '/.shaft-gui';
 const binariesDir = '/binaries';
@@ -15,69 +16,82 @@ const appConfig = require('./config/appConfig.json');
 function init() {
 
     return new Promise((resolve, reject) => {
-        logger.info('SHAFT GUI Wallet started v0.0.1');
+        //Computing paths;
+        let paths = gethNodeService.initPaths();
+
+        //Checking and creating folders
+        gethNodeService.checkOrCreateFolders(paths).then(() => {
+                logger.debug('All folders seems to be exist or created, we may starting app.');
+                let logPath = paths.homeDir + paths.shaftGUIDir + paths.logfile;
+                logger.debug('Starting file logger in path ' + logPath);
+                loggerFactory.initFileLogger(logPath);
+                logger.info('SHAFT GUI Wallet started v0.0.1');
+
+                logger.debug("Checking for local binaries");
+                gethNodeService.init(paths).then(success => {
+                    logger.debug('Successful start:', success)
+                }, err => {
+                    logger.error('BAD', err);
+                    reject(err);
+                });
+            },
+            rej => reject(rej));
 
         // Open the DevTools.
         // mainWindow.webContents.openDevTools()
-        logger.debug("Checking for local binaries");
-        gethNodeService.init().then(success=> {
-            console.log('Success', success)
-        }, err=> {
-            console.log('BAD', err);
-        });
 
-/*
+        /*
 
-        if (!checkGUIDirCreated()) {
-            logger.debug('GUI folder is not exists');
-            logger.silly('Creating folder ' + homeDir + shaftDir);
-            fs.mkdir(homeDir + shaftDir, function (err) {
-                if (err) {
-                    logger.error('Error while creating Shaft GUI folder %s', err);
-                    throw new Error('Could not create Shaft GUI folder [' + homeDir + shaftDir + ']');
+                if (!checkGUIDirCreated()) {
+                    logger.debug('GUI folder is not exists');
+                    logger.silly('Creating folder ' + homeDir + shaftDir);
+                    fs.mkdir(homeDir + shaftDir, function (err) {
+                        if (err) {
+                            logger.error('Error while creating Shaft GUI folder %s', err);
+                            throw new Error('Could not create Shaft GUI folder [' + homeDir + shaftDir + ']');
+                        }
+                        logger.silly('Successfully created Shaft GUI folder');
+
+                        fs.mkdir(homeDir + shaftDir + binariesDir, function (err) {
+                            if (err) {
+                                throw new Error('Could not create Shaft geth binaries dir [' + homeDir + shaftDir + binariesDir + ']');
+                            }
+                            downloadBinary().then(() => {
+                                logger.info("Successfully downloaded binaries");
+                                //starting node
+                                initNode();
+                            }, error => {
+                                logger.error(error);
+                            });
+                        })
+                    });
+                } else {
+                    logger.silly('Shaft GUI folder dir exists');
+                    if (checkBinariesDirCreated()) {
+                        logger.silly('Binaries dir exists');
+                        checkBinary();
+                        initNode();
+                        //Delaying startup
+                        //Todo connect after ipc file creating
+                        setTimeout(function () {
+                            web3service.init(appConfig.testnet ? homeDir + '/.shaft/testnet/geth.ipc' : homeDir + '/.shaft/geth.ipc');
+                        }, 5000)
+                    } else {
+                        logger.silly('Binaries dir does not exists, creating');
+                        fs.mkdir(homeDir + shaftDir + binariesDir, function (err) {
+                            if (err) {
+                                throw new Error('Could not create Shaft geth binaries dir [' + homeDir + shaftDir + binariesDir + ']');
+                            }
+                            downloadBinary().then(() => {
+                                logger.info('Binaries pulled from github, starting node')
+                                initNode();
+                            }, err => {
+                                throw new Error(err)
+                            });
+                        })
+                    }
                 }
-                logger.silly('Successfully created Shaft GUI folder');
-
-                fs.mkdir(homeDir + shaftDir + binariesDir, function (err) {
-                    if (err) {
-                        throw new Error('Could not create Shaft geth binaries dir [' + homeDir + shaftDir + binariesDir + ']');
-                    }
-                    downloadBinary().then(() => {
-                        logger.info("Successfully downloaded binaries");
-                        //starting node
-                        initNode();
-                    }, error => {
-                        logger.error(error);
-                    });
-                })
-            });
-        } else {
-            logger.silly('Shaft GUI folder dir exists');
-            if (checkBinariesDirCreated()) {
-                logger.silly('Binaries dir exists');
-                checkBinary();
-                initNode();
-                //Delaying startup
-                //Todo connect after ipc file creating
-                setTimeout(function () {
-                    web3service.init(appConfig.testnet ? homeDir + '/.shaft/testnet/geth.ipc' : homeDir + '/.shaft/geth.ipc');
-                }, 5000)
-            } else {
-                logger.silly('Binaries dir does not exists, creating');
-                fs.mkdir(homeDir + shaftDir + binariesDir, function (err) {
-                    if (err) {
-                        throw new Error('Could not create Shaft geth binaries dir [' + homeDir + shaftDir + binariesDir + ']');
-                    }
-                    downloadBinary().then(() => {
-                        logger.info('Binaries pulled from github, starting node')
-                        initNode();
-                    }, err => {
-                        throw new Error(err)
-                    });
-                })
-            }
-        }
-*/
+        */
 
     })
 
@@ -179,7 +193,7 @@ function downloadBinary() {
         file.on('finish', function () {
             logger.info('Successfully downloaded geth binary');
             file.close();  // close() is async, call cb after close completes.
-        //TODO REMOVE THIS HARDCODE \/
+            //TODO REMOVE THIS HARDCODE \/
             fs.chmodSync(homeDir + '/.shaft-gui' + binariesDir + '/geth_linux', '0755');
             resolve();
         });

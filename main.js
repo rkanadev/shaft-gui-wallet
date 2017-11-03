@@ -16,24 +16,29 @@ const app = require('./app/app');
 let mainWindow;
 
 function createWindow() {
-    //todo app init is a promise
-    app.init();
+    app.init().then(() => {
+        logger.info("Shaft GUI Wallet initialized")
+        // Create the browser window.
+        mainWindow = new BrowserWindow({width: 800, height: 600, frame: false});
 
-    // Create the browser window.
-    mainWindow = new BrowserWindow({width: 800, height: 600, frame: false});
-
-    // and load the index.html of the app.
-    mainWindow.loadURL("http://127.0.0.1:4200");
+        // and load the index.html of the app.
+        mainWindow.loadURL("http://127.0.0.1:4200");
 
 
-    // Emitted when the window is closed.
-    mainWindow.on('closed', function () {
-        logger.info('Closing wallet');
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        mainWindow = null
-    })
+        // Emitted when the window is closed.
+        mainWindow.on('closed', function () {
+            logger.info('Closing wallet');
+            // Dereference the window object, usually you would store windows
+            // in an array if your app supports multi windows, this is the time
+            // when you should delete the corresponding element.
+            mainWindow = null
+        })
+    }, err => {
+        logger.error(err);
+        process.exit(0)
+    });
+
+
 }
 
 // This method will be called when Electron has finished
