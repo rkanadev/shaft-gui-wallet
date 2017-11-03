@@ -15,7 +15,7 @@ let mainWindow;
 function createWindow() {
 
     updater.init(mainWindow);
-
+    logger.info("Test passed");
     app.init().then(() => {
         logger.info("Shaft GUI Wallet initialized");
         // Create the browser window.
