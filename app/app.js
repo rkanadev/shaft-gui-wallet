@@ -30,6 +30,7 @@ function init() {
                 logger.debug("Checking for local binaries");
                 gethNodeService.init(paths).then(success => {
                     logger.debug('Successful start:', success)
+                    resolve()
                 }, err => {
                     logger.error('BAD', err);
                     reject(err);

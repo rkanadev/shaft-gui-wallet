@@ -4,9 +4,6 @@ const electronApp = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-const path = require('path');
-const winston = require('winston');
-
 const logger = require('./app/util/logger').getLogger('Main');
 
 const app = require('./app/app');
@@ -17,7 +14,7 @@ let mainWindow;
 
 function createWindow() {
     app.init().then(() => {
-        logger.info("Shaft GUI Wallet initialized")
+        logger.info("Shaft GUI Wallet initialized");
         // Create the browser window.
         mainWindow = new BrowserWindow({width: 800, height: 600, frame: false});
 

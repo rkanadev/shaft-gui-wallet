@@ -101,7 +101,6 @@ function downloadBinary(url, destPath) {
         file.on('finish', function () {
             logger.info('Successfully downloaded geth binary');
             file.close();  // close() is async, call cb after close completes.
-            fs.chmodSync(homeDir + shaftGUIDir + binariesDir + '/geth_linux', '0755');
             resolve();
         });
 
@@ -242,7 +241,7 @@ function init(paths) {
                     if (isPlatformLinux()) {
                         fs.chmodSync(execPath, '0755');
                     }
-                    logger.info("Successfully downloaded build from" + buildUrl + " and placed it into "
+                    logger.info("Successfully downloaded build from" + paths.buildUrl + " and placed it into "
                         + execPath);
                     let ipcPath = getIpcPath(paths, appConfig.testnet);
                     startNode(ipcPath, execPath, sha256, nodeLogFile).then(() => onNodeStarted(resolve), err => onNodeStartError(err, reject));
