@@ -12,6 +12,7 @@ const spawn = require('child_process').spawn;
 const web3service = require('./service/web3service');
 const gethNodeService = require('./service/gethNodeService');
 const appConfig = require('./config/appConfig.json');
+const version = require('../package.json').version;
 
 function init() {
 
@@ -25,7 +26,7 @@ function init() {
                 let logPath = paths.homeDir + paths.shaftGUIDir + paths.logfile;
                 logger.debug('Starting file logger in path ' + logPath);
                 loggerFactory.initFileLogger(logPath);
-                logger.info('SHAFT GUI Wallet started v0.0.1');
+                logger.info('SHAFT GUI Wallet started v' + version);
 
                 logger.debug("Checking for local binaries");
                 gethNodeService.init(paths).then(success => {

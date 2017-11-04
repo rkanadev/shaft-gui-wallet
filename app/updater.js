@@ -1,7 +1,7 @@
 const {app, dialog} = require('electron');
 const path = require("path");
 const logger = require('./util/logger').getLogger("Auto-Updater");
-const {autoUpdater} = require("electron-updater");
+const {autoUpdater} = require("electron");
 
 function init(mainWindow) {
     logger.info("Starting auto updater");
