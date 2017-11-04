@@ -23,7 +23,7 @@ function init(mainWindow) {
         logger.info('Download progress...');
     });
     autoUpdater.on('update-downloaded', (ev, info) => {
-        logger.info('Update downloaded; will install in 5 seconds');
+        logger.info('Update downloaded; will install in 5 seconds',ev ,info);
     });
 
     autoUpdater.checkForUpdates();
