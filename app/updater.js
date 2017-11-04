@@ -6,7 +6,7 @@ const {autoUpdater} = require("electron-updater");
 function init(mainWindow) {
     logger.info("Starting auto updater");
 
-    autoUpdater.on('checking-for-update', (a,b) => {
+    autoUpdater.on('checking-for-update', (a, b) => {
         logger.info('Checking for update...');
     });
 
@@ -23,7 +23,9 @@ function init(mainWindow) {
         logger.info('Download progress...');
     });
     autoUpdater.on('update-downloaded', (ev, info) => {
-        logger.info('Update downloaded; will install in 5 seconds',ev ,info);
+        logger.info('Update downloaded; will install in 5 seconds');
+        console.log(ev);
+        console.log(info);
     });
 
     autoUpdater.checkForUpdates();
