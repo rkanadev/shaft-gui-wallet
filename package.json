@@ -5,7 +5,8 @@
   "main": "./main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --config build.json -l"
+    "build": "cd renderer && npm run build",
+    "build-binaries": "cd renderer && npm run build && cd .. && electron-builder --config build.json -l"
   },
   "repository": "https://code.shaft.sh/shaftsh/shaft",
   "keywords": [
@@ -21,6 +22,7 @@
   },
   "dependencies": {
     "bignumber.js": "^4.1.0",
+    "electron-is-dev": "^0.3.0",
     "http_server": "^1.0.12",
     "make-dir": "^1.1.0",
     "request": "^2.81.1",

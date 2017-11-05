@@ -50,7 +50,7 @@ const appRoutes: Routes = [
     CoreModule,
     BrowserModule, RouterModule.forRoot(
       appRoutes,
-      {enableTracing: false} // <-- debugging purposes only
+      {enableTracing: false, useHash: true} // <-- debugging purposes only
     ), BrowserAnimationsModule,
     FormsModule,
     HttpModule,

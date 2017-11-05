@@ -5,28 +5,6 @@ const logger = require('../util/logger').getLogger('IPC_Api');
 const web3service = require('../service/web3service');
 const BigNumber = require('bignumber.js');
 
-const IPCRequestsMap = {
-    init: {
-        request: "init_request",
-        response: "init_response",
-        description: "Init IPC layer. At now, just responses with actual map of request-response"
-    },
-    closeApp: {
-        request: "close_app_request",
-        response: "close_app_response",
-        description: "Closing SHAFT-GUI"
-    }
-};
-
-/*
-
-electron.ipcMain.on(IPCRequestsMap.init.request, (event, arg) => {
-    //console.log('IPC: Request from client', event, arg);
-    event.sender.send(IPCRequestsMap.init.response, {map: IPCRequestsMap})
-});
-*/
-
-
 electron.ipcMain.on('web3-req-channel', (event, arg) => {
     //console.log('IPC: Request from client', event, arg);
     logger.silly('Message from web3-req-channel:' + JSON.stringify(arg));

@@ -5,13 +5,18 @@ const electronApp = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
 const logger = require('./app/util/logger').getLogger('Main');
+const url = require('url');
+const path = require('path');
 
 const app = require('./app/app');
+const ipcApi = require('./app/ipc/ipc_api');
+const isDev = require('electron-is-dev');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
 function createWindow() {
+
 
     app.init().then(() => {
         logger.info("Shaft GUI Wallet initialized");
@@ -19,7 +24,16 @@ function createWindow() {
         mainWindow = new BrowserWindow({width: 800, height: 600, frame: false, center: true});
 
         // and load the index.html of the app.
-        mainWindow.loadURL("http://127.0.0.1:4200");
+        if (isDev) {
+            mainWindow.loadURL("http://127.0.0.1:4200");
+        } else {
+            // and load the index.html of the app.
+            mainWindow.loadURL(url.format({
+                pathname: path.join(__dirname + '/renderer/dist', 'index.html'),
+                protocol: 'file:',
+                slashes: true
+            }));
+        }
 
         // Emitted when the window is closed.
         mainWindow.on('closed', function () {
