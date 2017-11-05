@@ -7,15 +7,12 @@ const BrowserWindow = electron.BrowserWindow;
 const logger = require('./app/util/logger').getLogger('Main');
 
 const app = require('./app/app');
-const updater = require('./app/updater');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
 function createWindow() {
 
-    updater.init(mainWindow);
-    logger.info("Test passed");
     app.init().then(() => {
         logger.info("Shaft GUI Wallet initialized");
         // Create the browser window.

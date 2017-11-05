@@ -1,6 +1,6 @@
 {
   "name": "shaft-gui-wallet",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Shaft GUI wallet",
   "main": "./main.js",
   "scripts": {
@@ -21,9 +21,6 @@
   },
   "dependencies": {
     "bignumber.js": "^4.1.0",
-    "date-fns": "^1.29.0",
-    "electron-log": "^2.2.11",
-    "electron-updater": "^2.16.1",
     "http_server": "^1.0.12",
     "make-dir": "^1.1.0",
     "request": "^2.81.1",

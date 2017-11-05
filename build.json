@@ -9,11 +9,5 @@
         ]
       }
     ]
-  },
-  "publish": [
-    {
-      "provider": "generic",
-      "url": "https://ci.shaft.sh/repo/shaft-gui-wallet/"
-    }
-  ]
+  }
 }
