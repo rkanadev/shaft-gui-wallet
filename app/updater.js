@@ -13,6 +13,7 @@ function init(mainWindow) {
 
     autoUpdater.on('update-available', (ev, info) => {
         logger.info('Update available.');
+        autoUpdater.downloadUpdate();
     });
     autoUpdater.on('update-not-available', (ev, info) => {
         logger.info('Update not available.');
@@ -27,6 +28,7 @@ function init(mainWindow) {
         logger.info('Update downloaded; will install in 5 seconds');
         console.log(ev);
         console.log(info);
+        autoUpdater.quitAndInstall();
     });
 
     autoUpdater.checkForUpdatesAndNotify();
