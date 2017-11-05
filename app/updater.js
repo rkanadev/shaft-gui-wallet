@@ -26,9 +26,14 @@ function init(mainWindow) {
     });
     autoUpdater.on('update-downloaded', (ev, info) => {
         logger.info('Update downloaded; will install in 5 seconds');
+        dialog.showMessageBox({
+            title: 'Install Updates',
+            message: 'Updates downloaded, application will be quit for update...'
+        }, () => {
+            setImmediate(() => autoUpdater.quitAndInstall())
+        })
         console.log(ev);
         console.log(info);
-        autoUpdater.quitAndInstall();
     });
 
     autoUpdater.checkForUpdatesAndNotify();
