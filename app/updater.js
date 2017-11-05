@@ -1,7 +1,8 @@
 const {app, dialog} = require('electron');
 const path = require("path");
 const logger = require('./util/logger').getLogger("Auto-Updater");
-const {autoUpdater} = require("electron");
+const autoUpdater = require("electron-updater").autoUpdater;
+autoUpdater.autoDownload = false;
 
 function init(mainWindow) {
     logger.info("Starting auto updater");
@@ -28,7 +29,7 @@ function init(mainWindow) {
         console.log(info);
     });
 
-    autoUpdater.checkForUpdates();
+    autoUpdater.checkForUpdatesAndNotify();
 }
 
 module.exports = {
