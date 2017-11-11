@@ -86,14 +86,14 @@ export class Web3IPCService extends AbstractIPCService {
     });
   }
 
-  public lockAccount(address:string) {
+  public lockAccount(address: string) {
     return new Promise((resolve, reject) => {
       this.request('lock_account', address).subscribe(result => {
-        if(result.error) {
+        if (result.error) {
           reject(result.error)
         }
         let res = result.result;
-        if(result == null){
+        if (result == null) {
           reject('Lock account returned null, possibly invalid account address given');
         }
         resolve(res);
@@ -103,15 +103,32 @@ export class Web3IPCService extends AbstractIPCService {
     });
   }
 
-  public unlockAccount(address:string, password:string) {
+  public unlockAccount(address: string, password: string) {
     return new Promise((resolve, reject) => {
       this.request('unlock_account', {account: address, password: password}).subscribe(result => {
-        if(result.error) {
+        if (result.error) {
           reject(result.error)
         }
         let res = result.result;
-        if(result == null){
+        if (result == null) {
           reject('Unlock account returned null, possibly invalid account address given');
+        }
+        resolve(res);
+      }, err => {
+        reject(err)
+      });
+    });
+  }
+
+  public getTransactionsByAddress(address: string) {
+    return new Promise((resolve, reject) => {
+      this.request('get_transactions_by_address', address).subscribe(result => {
+        if (result.error) {
+          reject(result.error)
+        }
+        let res = result.result;
+        if (result == null) {
+          reject('Get transactions by address returned null');
         }
         resolve(res);
       }, err => {

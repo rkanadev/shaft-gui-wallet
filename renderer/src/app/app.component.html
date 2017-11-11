@@ -1,17 +1,17 @@
 <div class="app mat-app-background">
   <mat-sidenav-container class="container">
-    <shaft-header [sidenav]="sidenav"></shaft-header>
+    <shaft-header class="header" [sidenav]="sidenav"></shaft-header>
     <mat-sidenav #sidenav class="sidenav">
       <sidenav [sidenav]="sidenav"></sidenav>
     </mat-sidenav>
 
     <div class="sidenav-content">
       <div style="width:100%;height:100%">
-        <router-outlet></router-outlet>
+        <router-outlet style="width:100%;height:100%"></router-outlet>
       </div>
-      <shaft-footer class="footer-a"></shaft-footer>
     </div>
 
+    <shaft-footer class="footer-a"></shaft-footer>
   </mat-sidenav-container>
 
 </div>

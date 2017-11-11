@@ -18,6 +18,15 @@ export class AccountsComponent implements OnInit {
     this.accounts = [];
   }
 
+  public getBalance(address) {
+    let account = this.accounts[address];
+    if (account === null) {
+      return 0;
+    } else {
+      return (Math.round(account.balance/1000000000000000000)*10000)/10000;
+    }
+  }
+
   public getAccounts() {
     this.Web3IPCService.getAccounts().then(result => {
       //Get balance
@@ -53,11 +62,12 @@ export class AccountsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Submitting create account with password:', result);
-        /* this.Web3Service.newAccount(result).subscribe(result => {
-           console.log('Successfully created account. Address: ', result, result.json());
-           this.getAccounts();
-         }, error => {
-         })*/
+        this.Web3IPCService.newAccount(result).then(result => {
+          console.log('Successfully created account. Address: ', result, result.json());
+          this.getAccounts();
+        }, error => {
+          console.log('Error while creating account', error);
+        })
       }
     });
   }

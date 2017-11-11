@@ -4,11 +4,35 @@
   font-family: Roboto, "Helvetica Neue", sans-serif;
   height: 100%;
   width: 100%;
-  text-align: center;
+  text-align: left;
 }
 
-.heading {
-  width: 100%;
-  font-size: 1.4em;
-  padding: 10px;
+.heading-container {
+  display: inline-flex;
+  padding-left: 50px;
+}
+
+.address-info {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  padding-left: 10px;
+}
+
+.address {
+}
+
+.balance {
+
+}
+
+.label {
+
+}
+
+.transactions {
+  padding-top: 100px;
+  padding-bottom: 20px;
+  margin: 0 auto;
+  width: 90%;
 }

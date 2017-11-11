@@ -4,6 +4,7 @@ const ipcMain = require('electron').ipcMain;
 const logger = require('../util/logger').getLogger('IPC_Api');
 const web3service = require('../service/web3service');
 const BigNumber = require('bignumber.js');
+const fetch = require('node-fetch');
 
 electron.ipcMain.on('web3-req-channel', (event, arg) => {
     //console.log('IPC: Request from client', event, arg);
@@ -149,6 +150,21 @@ function getAccounts() {
     });
 }
 
+function getTransactionByAddress(address) {
+    return new Promise((resolve, reject) => {
+        fetch('https://testnet.explorer.shaft.sh/api/address/' + address)
+            .then(res => res.json())
+            .then(json => {
+                    let transactions = json.transactions;
+                    resolve(transactions);
+                }
+            )
+            .catch(err => {
+                reject(err)
+            });
+    })
+}
+
 function getBalance(address) {
     return new Promise((resolve, reject) => {
         let web3 = web3service.getWeb3();
@@ -156,7 +172,6 @@ function getBalance(address) {
         if (!web3) {
             reject()
         }
-
         web3.eth.getBalance(address, function (err, balance) {
             if (err) {
                 reject(err);
@@ -195,15 +210,14 @@ function newAccount(password) {
             reject('web3 is null')
         }
 
-
-        /*        web3.eth.personal.newAccount(password, function (err, balance) {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        let result = balance.toString(10);
-                        resolve(result);
-                    }
-                });*/
+        web3.personal.newAccount(password, function (err, balance) {
+            if (err) {
+                reject(err);
+            } else {
+                let result = balance.toString(10);
+                resolve(result);
+            }
+        });
     });
 }
 
@@ -271,6 +285,14 @@ function requestDecoder(data) {
                     resolve(result);
                 }, rej => reject(rej));
                 break;
+            case 'get_transactions_by_address':
+                if (!data.params) {
+                    reject('No params')
+                }
+                getTransactionByAddress(data.params).then((result) => {
+                    resolve(result);
+                }, rej => reject(rej));
+                break;
             default:
                 logger.error('Could not find suitable method for this request');
                 reject('Could not find suitable method for this request');
@@ -278,3 +300,7 @@ function requestDecoder(data) {
     });
 
 }
+
+module.exports = {
+    getAccounts: getAccounts
+};

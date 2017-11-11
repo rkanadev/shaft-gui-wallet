@@ -25,6 +25,8 @@
     "electron-is-dev": "^0.3.0",
     "http_server": "^1.0.12",
     "make-dir": "^1.1.0",
+    "nedb": "^1.8.0",
+    "node-fetch": "^1.7.3",
     "request": "^2.81.1",
     "web3": "^0.18.4",
     "winston": "^3.0.0-rc1"

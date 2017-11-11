@@ -15,6 +15,7 @@ export class SendComponent implements OnInit {
   private from: string;
   private to: string;
   private value: number;
+  private advanced: boolean;
 
   private error: boolean;
 

@@ -2,6 +2,7 @@
 
 const LoggerFactory = require('../util/logger');
 const logger = LoggerFactory.getLogger('GethNodeService');
+const web3Service = require('./web3service');
 const fs = require('fs');
 const crypto = require('crypto');
 const makeDir = require('make-dir');
@@ -131,7 +132,7 @@ function startNode(ipcPath, execPath, sha256, nodeLogFile) {
             if (appConfig.testnet) {
                 logger.info('Starting in network: testnet')
                 args.push('--testnet')
-            }else {
+            } else {
                 logger.info('Starting in network: mainnet')
             }
             if (appConfig.rpc) {
@@ -160,6 +161,12 @@ function startNode(ipcPath, execPath, sha256, nodeLogFile) {
 
                 // when proc outputs data in stderr
                 proc.stderr.on('data', (data) => {
+                    if (data.indexOf("IPC endpoint opened") !== -1) {
+                        //setTimeout(function () {
+                            logger.debug("Connecting web3 to gethNode");
+                            web3Service.init(ipcPath);
+                        //}, 3000);
+                    }
                     logger.silly(data);
                 });
                 resolve()
@@ -205,10 +212,10 @@ function getIpcPath(paths, testnet) {
     let ipcPath = paths.homeDir;
     if (testnet) {
         if (isPlatformLinux()) {
-            ipcPath += paths.homeDir + paths.shaftDir + '/testnet' + '/geth.ipc';
+            ipcPath +=  paths.shaftDir + '/testnet' + '/geth.ipc';
         }
         if (isPlatformWindows()) {
-            ipcPath += paths.homeDir + paths.shaftDir + '\\testnet' + '\\geth.ipc';
+            ipcPath += paths.shaftDir + '\\testnet' + '\\geth.ipc';
         }
         return ipcPath;
     } else {

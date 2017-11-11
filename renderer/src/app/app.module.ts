@@ -12,9 +12,10 @@ import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule,
+  MatPaginatorModule,
   MatProgressSpinnerModule,
   MatSelectModule,
-  MatSidenavModule,
+  MatSidenavModule, MatTableModule,
   MatToolbarModule
 } from "@angular/material";
 import {SidenavComponent} from './sidenav/sidenav.component';
@@ -22,12 +23,14 @@ import {AccountsComponent, CreateAccountDialog} from './accounts/accounts.compon
 import {CoreModule} from "./core.module";
 import {AccountComponent} from "./account/account.component";
 import {UnitConvertWeiToEther} from "./util/pipes/unit-converter-pipe";
+import {TestComponent} from "./test/test.component";
 
 const appRoutes: Routes = [
   {path: 'send', component: SendComponent},
   {path: 'home', component: HomeComponent},
   {path: 'accounts', component: AccountsComponent},
   {path: 'account/:addressHash', component: AccountComponent},
+  {path: 'test', component: TestComponent},
   {path: '**', redirectTo: '/home'}
 ];
 
@@ -35,6 +38,7 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
+    TestComponent,
     FooterComponent,
     HeaderComponent,
     SendComponent,
@@ -64,7 +68,9 @@ const appRoutes: Routes = [
     MatCardModule,
     MatInputModule,
     MatSelectModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+    MatTableModule,
   ],
   exports: [
     MatButtonModule,
@@ -72,7 +78,8 @@ const appRoutes: Routes = [
     MatToolbarModule,
     MatIconModule,
     MatCardModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatPaginatorModule
   ],
   bootstrap: [AppComponent]
 })
