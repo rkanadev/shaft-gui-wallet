@@ -24,6 +24,7 @@
     "bignumber.js": "^4.1.0",
     "electron-is-dev": "^0.3.0",
     "http_server": "^1.0.12",
+    "jsonfile": "^4.0.0",
     "make-dir": "^1.1.0",
     "nedb": "^1.8.0",
     "node-fetch": "^1.7.3",

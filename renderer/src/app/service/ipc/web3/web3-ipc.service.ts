@@ -54,7 +54,7 @@ export class Web3IPCService extends AbstractIPCService {
     });
   }
 
-  public getBalance(address:string):Promise<any> {
+  public getBalance(address: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.request('get_balance', address).subscribe(result => {
         let res = result.result;
@@ -64,7 +64,8 @@ export class Web3IPCService extends AbstractIPCService {
       });
     });
   }
-  public newAccount(password:string):Promise<any> {
+
+  public newAccount(password: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.request('new_account', password).subscribe(result => {
         let res = result.result;
@@ -75,7 +76,7 @@ export class Web3IPCService extends AbstractIPCService {
     });
   }
 
-  public sendTransaction(transactionData:object) {
+  public sendTransaction(transactionData: object) {
     return new Promise((resolve, reject) => {
       this.request('send_transaction', transactionData).subscribe(result => {
         let res = result.result;
@@ -129,6 +130,40 @@ export class Web3IPCService extends AbstractIPCService {
         let res = result.result;
         if (result == null) {
           reject('Get transactions by address returned null');
+        }
+        resolve(res);
+      }, err => {
+        reject(err)
+      });
+    });
+  }
+
+  public saveAddressLabel(address: string, label: string) {
+    return new Promise((resolve, reject) => {
+      this.request('save_address_label', {address: address, label: label}).subscribe(result => {
+        if (result.error) {
+          reject(result.error)
+        }
+        let res = result.result;
+        if (result == null) {
+          reject('Save address label returned null');
+        }
+        resolve(res);
+      }, err => {
+        reject(err)
+      });
+    });
+  }
+
+  public getAddressLabel(address: string) {
+    return new Promise((resolve, reject) => {
+      this.request('get_address_label', {address: address}).subscribe(result => {
+        if (result.error) {
+          reject(result.error)
+        }
+        let res = result.result;
+        if (result == null) {
+          reject('Get address label returned null');
         }
         resolve(res);
       }, err => {

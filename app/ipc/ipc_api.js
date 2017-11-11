@@ -3,6 +3,7 @@ const electron = require('electron');
 const ipcMain = require('electron').ipcMain;
 const logger = require('../util/logger').getLogger('IPC_Api');
 const web3service = require('../service/web3service');
+const configService = require('../service/config-service');
 const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
 
@@ -221,8 +222,27 @@ function newAccount(password) {
     });
 }
 
+function saveAddressLabel(address, label) {
+    return new Promise((resolve, reject) => {
+        configService.saveAddressLabel(address, label).then(() => {
+            resolve();
+        }, error => {
+            reject(error)
+        })
+    });
+}
+
+function getAddressLabel(address,) {
+    return new Promise((resolve, reject) => {
+        configService.getAddressLabel(address).then((label) => resolve(label), (err) => {
+            reject(err)
+        })
+    })
+}
+
 function requestDecoder(data) {
     return new Promise((resolve, reject) => {
+        //todo validate data.params
         switch (data.method) {
             case 'is_syncing':
                 isSyncing().then((result) => {
@@ -290,6 +310,22 @@ function requestDecoder(data) {
                     reject('No params')
                 }
                 getTransactionByAddress(data.params).then((result) => {
+                    resolve(result);
+                }, rej => reject(rej));
+                break;
+            case 'save_address_label':
+                if (!data.params && (!data.params.address || !data.params.label)) {
+                    reject('No params')
+                }
+                saveAddressLabel(data.params.address, data.params.label).then((result) => {
+                    resolve(result);
+                }, rej => reject(rej));
+                break;
+            case 'get_address_label':
+                if (!data.params && (!data.params.address)) {
+                    reject('No params')
+                }
+                getAddressLabel(data.params.address).then((result) => {
                     resolve(result);
                 }, rej => reject(rej));
                 break;

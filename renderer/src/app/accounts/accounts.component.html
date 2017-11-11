@@ -5,7 +5,7 @@
       <li *ngFor="let account of getAccountsAsArray();let i = index">
         <div>
           <mat-card class="account_card" [routerLink]="['/account', account]">
-            <mat-card-title>#{{account.substr(2,8)}}</mat-card-title>
+            <mat-card-title>{{this.accounts[account].label}}</mat-card-title>
             <mat-card-subtitle>{{getBalance(account)}} SHF</mat-card-subtitle>
             <span>{{account.substr(0,16)}}...</span>
           </mat-card>

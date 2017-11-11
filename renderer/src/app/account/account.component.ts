@@ -38,19 +38,23 @@ export class AccountComponent implements OnInit {
     this.transactions = [];
     this.displayedColumns = ['from', 'to', 'amount'];
     this.transactionDatabase = new TransactionDatabase();
-    this.label = "My label";
     this.dataSource = new TransactionDataSource(this.transactionDatabase);
+
   }
 
   public openSnackBar(label) {
-    this.snackBar.open(`Successfully saved label ${label} for this address`, "t",{
+    this.snackBar.open(`Successfully saved label ${label} for this address`, "t", {
       duration: 5000,
     });
   }
 
   public saveLabel(address, label) {
-    console.log(`Saved label ${label} for address ${address}`);
-    this.openSnackBar(label);
+    this.Web3IPCService.saveAddressLabel(address, label).then(() => {
+      console.log(`Saved label ${label} for address ${address}`);
+      this.openSnackBar(label);
+    }, err => {
+      console.log('Error saving label ' + label + ' for address ' + address, err);
+    });
 
   }
 
@@ -60,6 +64,15 @@ export class AccountComponent implements OnInit {
       this.address = addressHash;
 
       this.accountIconBase64 = this.AccountIconService.getIconBase64(this.address);
+
+      this.Web3IPCService.getAddressLabel(this.address).then((label: string) => {
+        console.log('Got label from config: ', label);
+        this.label = label;
+      }, err => {
+        console.log('Could not get label from config, probably not set: ', err);
+        this.label = this.address.substr(0, 8);
+      });
+
 
       this.Web3IPCService.getBalance(this.address).then(balance => {
         this.balance = balance;

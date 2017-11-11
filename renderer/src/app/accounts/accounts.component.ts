@@ -23,7 +23,7 @@ export class AccountsComponent implements OnInit {
     if (account === null) {
       return 0;
     } else {
-      return (Math.round(account.balance/1000000000000000000)*10000)/10000;
+      return (Math.round(account.balance / 1000000000000000000) * 10000) / 10000;
     }
   }
 
@@ -32,7 +32,12 @@ export class AccountsComponent implements OnInit {
       //Get balance
       Observable.from(result).subscribe((address: string) => {
         this.Web3IPCService.getBalance(address).then((result) => {
-          this.accounts[address] = {balance: result}
+          this.Web3IPCService.getAddressLabel(address).then((label) => {
+            this.accounts[address] = {balance: result, label: label}
+          }, err => {
+            console.log('Could not get label for ', address, '. Probably not set.', err);
+            this.accounts[address] = {balance: result, label: address.substr(0, 8)}
+          });
         }, err => {
           console.log('Error', err);
           this.accounts[address] = {balance: result, error: err}
