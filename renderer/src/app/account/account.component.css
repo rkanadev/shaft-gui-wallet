@@ -10,16 +10,20 @@
 .heading-container {
   display: inline-flex;
   padding-left: 50px;
+  justify-content: center;
+  align-items: center;
 }
 
 .address-info {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  justify-content: center;
   padding-left: 10px;
 }
 
 .address {
+  font-size: 110%;
 }
 
 .balance {
@@ -27,12 +31,13 @@
 }
 
 .label {
-
 }
 
 .transactions {
-  padding-top: 100px;
-  padding-bottom: 20px;
   margin: 0 auto;
   width: 90%;
+}
+
+.img_container img {
+  border-radius: 50px;
 }

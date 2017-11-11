@@ -1,14 +1,22 @@
 <div class="account">
   <div class="heading-container">
     <div *ngIf="accountIconBase64">
-      <img src="{{accountIconBase64}}">
+      <div class="img_container">
+        <img src="{{accountIconBase64}}">
+      </div>
     </div>
     <div class="address-info" *ngIf="address && balance">
-      <span class="label">My label</span>
-      <span class="address">{{address}}</span>
+
+      <mat-form-field class="label">
+        <input matInput placeholder="Label" (change)="saveLabel(address, label)" [(ngModel)]="label"/>
+      </mat-form-field>
+
+      <div class="address">
+        <span>{{address}}</span></div>
       <span class="balance">Balance:{{balance | weiToEther}} SHF</span>
     </div>
   </div>
+
   <div class="transactions">
     <div *ngIf="transactions.length === 0">
       No transactions found on this address

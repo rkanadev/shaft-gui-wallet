@@ -11,11 +11,12 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatExpansionModule, MatIconModule, MatInputModule,
+  MatMenuModule,
   MatPaginatorModule,
   MatProgressSpinnerModule,
   MatSelectModule,
-  MatSidenavModule, MatTableModule,
+  MatSidenavModule, MatSnackBarModule, MatTableModule,
   MatToolbarModule
 } from "@angular/material";
 import {SidenavComponent} from './sidenav/sidenav.component';
@@ -71,6 +72,8 @@ const appRoutes: Routes = [
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatTableModule,
+    MatExpansionModule,
+    MatSnackBarModule,
   ],
   exports: [
     MatButtonModule,

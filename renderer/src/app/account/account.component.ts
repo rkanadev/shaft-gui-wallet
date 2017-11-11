@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Web3IPCService} from "../service/ipc/web3/web3-ipc.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
-import {MatPaginator} from "@angular/material";
+import {MatPaginator, MatSnackBar} from "@angular/material";
 import {DataSource} from "@angular/cdk/collections";
 import {Transaction} from "../model/Transaction";
 import {UnitConvertWeiToEther} from "../util/pipes/unit-converter-pipe";
@@ -24,6 +24,7 @@ export class AccountComponent implements OnInit {
   private displayedColumns: string[];
   private dataSource: TransactionDataSource | null;
   private transactionDatabase: TransactionDatabase;
+  private label: string;
 
   @ViewChild(MatPaginator)
   set setPaginatorHandler(paginator: MatPaginator) {
@@ -33,28 +34,24 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  constructor(private route: ActivatedRoute, private Web3IPCService: Web3IPCService, private AccountIconService: AccountIconService) {
+  constructor(private route: ActivatedRoute, private Web3IPCService: Web3IPCService, private AccountIconService: AccountIconService, public snackBar: MatSnackBar) {
     this.transactions = [];
     this.displayedColumns = ['from', 'to', 'amount'];
-
-    /*
-    *
-  blockHash: string;
-  blockNumber: number;
-  from: string;
-  gas: number;
-  gasPrice: number;
-  hash: string;
-  input: string;
-  nonce: number;
-  to: string;
-  transactionIndex: number;
-  value: number;
-
-
-    * */
     this.transactionDatabase = new TransactionDatabase();
+    this.label = "My label";
     this.dataSource = new TransactionDataSource(this.transactionDatabase);
+  }
+
+  public openSnackBar(label) {
+    this.snackBar.open(`Successfully saved label ${label} for this address`, "t",{
+      duration: 5000,
+    });
+  }
+
+  public saveLabel(address, label) {
+    console.log(`Saved label ${label} for address ${address}`);
+    this.openSnackBar(label);
+
   }
 
   ngOnInit() {
