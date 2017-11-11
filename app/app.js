@@ -11,25 +11,24 @@ const builds = require('./config/builds.json');
 const spawn = require('child_process').spawn;
 const web3service = require('./service/web3service');
 const gethNodeService = require('./service/gethNodeService');
+const pathsService = require('./service/paths-service');
 const appConfig = require('./config/appConfig.json');
 const version = require('../package.json').version;
 
 function init() {
-
     return new Promise((resolve, reject) => {
         //Computing paths;
-        let paths = gethNodeService.initPaths();
 
         //Checking and creating folders
-        gethNodeService.checkOrCreateFolders(paths).then(() => {
+        gethNodeService.checkOrCreateFolders().then(() => {
                 logger.debug('All folders seems to be exist or created, we may starting app.');
-                let logPath = paths.homeDir + paths.shaftGUIDir + paths.logfile;
+                let logPath = pathsService.getLogPath();
                 logger.debug('Starting file logger in path ' + logPath);
                 loggerFactory.initFileLogger(logPath);
                 logger.info('SHAFT GUI Wallet started v' + version);
 
                 logger.debug("Checking for local binaries");
-                gethNodeService.init(paths).then(success => {
+                gethNodeService.init().then(success => {
                     logger.debug('Successful start:', success);
                     resolve()
                 }, err => {
