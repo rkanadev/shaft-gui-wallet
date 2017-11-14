@@ -319,7 +319,8 @@ function requestDecoder(data) {
                 }
                 saveAddressLabel(data.params.address, data.params.label).then((result) => {
                     resolve(result);
-                }, rej => reject(rej));
+                }, rej =>
+                    reject(rej));
                 break;
             case 'get_address_label':
                 if (!data.params && (!data.params.address)) {

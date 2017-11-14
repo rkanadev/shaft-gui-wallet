@@ -8,12 +8,13 @@ import {DataSource} from "@angular/cdk/collections";
 import {Transaction} from "../model/Transaction";
 import {UnitConvertWeiToEther} from "../util/pipes/unit-converter-pipe";
 import {AccountIconService} from "../service/account-icon/account-icon.service";
+import {NotificationService} from "../service/notification/notification.service";
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css'],
-  providers: [MatPaginator, UnitConvertWeiToEther, AccountIconService]
+  providers: [MatPaginator, UnitConvertWeiToEther, AccountIconService, NotificationService]
 })
 export class AccountComponent implements OnInit {
 
@@ -34,7 +35,7 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  constructor(private route: ActivatedRoute, private Web3IPCService: Web3IPCService, private AccountIconService: AccountIconService, public snackBar: MatSnackBar) {
+  constructor(private route: ActivatedRoute, private Web3IPCService: Web3IPCService, private AccountIconService: AccountIconService, private NotificationService: NotificationService) {
     this.transactions = [];
     this.displayedColumns = ['from', 'to', 'amount'];
     this.transactionDatabase = new TransactionDatabase();
@@ -42,19 +43,26 @@ export class AccountComponent implements OnInit {
 
   }
 
-  public openSnackBar(label) {
-    this.snackBar.open(`Successfully saved label ${label} for this address`, "t", {
-      duration: 5000,
-    });
+  public labelSavedSnackbar(label) {
+    this.NotificationService.addressLabelSaved(label);
+  }
+
+  public labelRemovedSnackbar() {
+    this.NotificationService.addressLabelRemoved();
   }
 
   public saveLabel(address, label) {
-    this.Web3IPCService.saveAddressLabel(address, label).then(() => {
-      console.log(`Saved label ${label} for address ${address}`);
-      this.openSnackBar(label);
-    }, err => {
-      console.log('Error saving label ' + label + ' for address ' + address, err);
-    });
+    if (label === "") {
+      this.labelRemovedSnackbar();
+      this.label = this.address.substr(0, 8)
+    } else {
+      this.Web3IPCService.saveAddressLabel(address, label).then(() => {
+        console.log(`Saved label ${label} for address ${address}`);
+        this.labelSavedSnackbar(label);
+      }, err => {
+        console.log('Error saving label ' + label + ' for address ' + address, err);
+      });
+    }
 
   }
 

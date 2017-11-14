@@ -65,6 +65,7 @@ function saveAddressLabel(address, label) {
         writeConfig(config).then(() => {
             logger.info(`Successfully saved config. Added label ${label} for address ${address}`);
             readConfig();
+            resolve();
         }, err => {
             logger.error(err);
             reject(err);

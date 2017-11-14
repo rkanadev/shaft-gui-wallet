@@ -15,7 +15,7 @@
 }
 
 .accounts_list ul li {
-  padding-top:0;
+  padding-top: 0;
   padding-bottom: 25px;
   padding-left: 25px;
   margin-bottom: 25px;
@@ -30,4 +30,8 @@
   text-decoration: none;
   color: black;
   opacity: 0.8;
+}
+
+.account-icon {
+
 }

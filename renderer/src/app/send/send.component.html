@@ -1,8 +1,8 @@
 <div class="send">
   <div *ngIf="accounts.length > 0">
-    <form #sendForm="ngForm"  class="send-form">
+    <form novalidate class="send-form" [formGroup]="form">
       <mat-form-field [style.width]="'100%'" class="send-form_field">
-        <mat-select placeholder="Choose from" [(ngModel)]="from" name="from">
+        <mat-select placeholder="Choose from" formControlName="from" name="from">
           <mat-option *ngFor="let account of accounts" [value]="account">
             {{account}}
           </mat-option>
@@ -10,18 +10,15 @@
       </mat-form-field>
 
       <mat-form-field [style.width]="'100%'" class="send-form_field">
-        <mat-select placeholder="Choose to" [(ngModel)]="to" name="to">
-          <mat-option *ngFor="let account of accounts" [value]="account">
-            {{account}}
-          </mat-option>
-        </mat-select>
+        <input matInput placeholder="To" name="to" formControlName="to" type="text">
       </mat-form-field>
+
       <mat-form-field [style.width]="'100%'" class="send-form_field">
-        <input matInput placeholder="Amount" name="value" [(ngModel)]="value" type="number">
+        <input matInput placeholder="Amount" name="value" formControlName="value" type="number">
       </mat-form-field>
       <div>
         <p>
-          <button (click)="openSendDialog()" mat-raised-button mat-button="primary" color="primary">Send
+          <button [disabled]="form.invalid" (click)="openSendDialog()" mat-raised-button mat-button="primary" color="primary">Send
           </button>
 <!--
           <button style="background-color: #64b4ed" (click)="advanced=!advanced" mat-raised-button mat-button="primary" color="primary">Advanced</button>
@@ -31,6 +28,6 @@
     </form>
   </div>
   <div *ngIf="accounts.length ==  0">
-    ==0
+    No account created
   </div>
 </div>

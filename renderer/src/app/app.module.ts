@@ -8,7 +8,7 @@ import {SendComponent, SendDialog} from './send/send.component';
 import {HomeComponent} from './home/home.component';
 import {RouterModule, Routes} from "@angular/router";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatExpansionModule, MatIconModule, MatInputModule,
@@ -24,14 +24,12 @@ import {AccountsComponent, CreateAccountDialog} from './accounts/accounts.compon
 import {CoreModule} from "./core.module";
 import {AccountComponent} from "./account/account.component";
 import {UnitConvertWeiToEther} from "./util/pipes/unit-converter-pipe";
-import {TestComponent} from "./test/test.component";
 
 const appRoutes: Routes = [
   {path: 'send', component: SendComponent},
   {path: 'home', component: HomeComponent},
   {path: 'accounts', component: AccountsComponent},
   {path: 'account/:addressHash', component: AccountComponent},
-  {path: 'test', component: TestComponent},
   {path: '**', redirectTo: '/home'}
 ];
 
@@ -39,7 +37,6 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    TestComponent,
     FooterComponent,
     HeaderComponent,
     SendComponent,
@@ -58,6 +55,7 @@ const appRoutes: Routes = [
       {enableTracing: false, useHash: true} // <-- debugging purposes only
     ), BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     BrowserAnimationsModule,
     MatButtonModule,

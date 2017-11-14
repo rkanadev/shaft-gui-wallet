@@ -9,7 +9,7 @@ export class AccountIconService {
 
   public getIconBase64(address:string) {
     let icon = blockies.create({ // All options are optional
-      seed: 'randstring', // seed used to generate icon data, default: random
+      seed: address, // seed used to generate icon data, default: random
       color: '#D1C4E9', // to manually specify the icon color, default: random
       bgcolor: '#673AB7', // choose a different background color, default: random
       size: 16, // width/height of the icon in blocks, default: 8
