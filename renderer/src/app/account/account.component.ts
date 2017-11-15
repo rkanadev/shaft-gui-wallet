@@ -53,8 +53,15 @@ export class AccountComponent implements OnInit {
 
   public saveLabel(address, label) {
     if (label === "") {
-      this.labelRemovedSnackbar();
-      this.label = this.address.substr(0, 8)
+      this.label = this.address.substr(0, 8);
+      label = this.label;
+      this.Web3IPCService.saveAddressLabel(address, label).then(() => {
+        console.log(`Saved empty label for address ${address}`);
+        this.labelSavedSnackbar(label);
+        this.labelRemovedSnackbar();
+      }, err => {
+        console.log('Error saving label ' + label + ' for address ' + address, err);
+      });
     } else {
       this.Web3IPCService.saveAddressLabel(address, label).then(() => {
         console.log(`Saved label ${label} for address ${address}`);

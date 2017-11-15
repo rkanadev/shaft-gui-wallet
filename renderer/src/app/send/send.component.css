@@ -1,4 +1,5 @@
 .send {
+  height: 100%;
   margin: 0 auto;
   padding: 50px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -10,7 +11,7 @@
 }
 
 .send-form {
-  width: 60%;
+  width: 50%;
   margin: 0 auto;
 }
 

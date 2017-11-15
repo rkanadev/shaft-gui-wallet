@@ -29,7 +29,7 @@ electron.ipcMain.on('web3-req-channel', (event, arg) => {
 });
 
 function isSyncing() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         let web3 = web3service.getWeb3();
 
         if (!web3) {
@@ -37,17 +37,24 @@ function isSyncing() {
         }
 
         web3.eth.getSyncing(function (err, sync) {
+            //todo see web3api isSyncing and rethink that
             if (err) {
-                if (!sync) {
-                    //node is not syncing, boolean
-                    resolve(sync);
-                } else {
-                    //node is syncing, obj, see web3api
-                    resolve(true);
-                }
-
+                reject(err);
             } else {
-                resolve(sync);
+                //syncObject = {currentBlock:0,highestBlock:0,knownStates:0,pulledStates:0,startingBlock:0}
+                if (typeof sync === 'boolean') {
+                    //node is not syncing, boolean
+                    if (sync) {
+                        resolve('Syncing');
+                    } else {
+                        resolve('Not syncing');
+                    }
+                } else if (typeof sync === 'object') {
+                    //node is syncing, obj, see web3api
+                    resolve(`Syncing: ${sync.currentBlock}/${sync.highestBlock}`);
+                } else {
+                    reject('Unknown type of sync ' + typeof sync, +" " + sync);
+                }
             }
         });
     })

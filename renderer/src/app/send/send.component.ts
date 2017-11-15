@@ -50,7 +50,7 @@ export class SendComponent implements OnInit {
     let value = this.form.controls.value.value;
 
     let dialogRef = this.dialog.open(SendDialog, {
-      width: '80%',
+      width: '50%',
       data: {from: from, to: to, value: value}
     });
 

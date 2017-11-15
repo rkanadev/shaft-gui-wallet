@@ -72,6 +72,7 @@ function startNode(ipcPath, execPath, sha256, nodeLogFile) {
         let isIPCFileExists = fs.existsSync(ipcPath);
         logger.silly('Checking IPC file in' + ipcPath);
         if (isIPCFileExists) {
+            web3Service.init(ipcPath);
             resolve();
         } else {
             logger.info('IPC file not found, starting node')

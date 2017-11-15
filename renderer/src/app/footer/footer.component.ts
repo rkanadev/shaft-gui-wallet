@@ -13,7 +13,7 @@ import {Web3IPCService} from "../service/ipc/web3/web3-ipc.service";
 export class FooterComponent implements OnInit, OnDestroy {
 
 
-  private syncing: boolean;
+  private syncing: string;
   private peerCount: number;
   private blockNumber: number | string;
   private error: boolean;
@@ -24,19 +24,19 @@ export class FooterComponent implements OnInit, OnDestroy {
     this.peerCount = 0;
 
     console.log(this.Web3IPCService);
-     this.tickSubscription = Observable.interval(1000 * 10).startWith(1)
-       .subscribe(() => {
-         this.tick();
-       });
+    this.tickSubscription = Observable.interval(1000 * 10).startWith(1)
+      .subscribe(() => {
+        this.tick();
+      });
     this.tick();
 
   }
 
   tick() {
-    this.Web3IPCService.isSyncing().then((result: boolean) => {
+    this.Web3IPCService.isSyncing().then((result: string) => {
       this.syncing = result;
     }, err => {
-      this.syncing = false;
+      this.syncing = "Not syncing (error)";
     });
 
     this.Web3IPCService.getPeerCount().then((result: number) => {
@@ -60,6 +60,45 @@ export class FooterComponent implements OnInit, OnDestroy {
 
   getSyncing() {
     return this.syncing;
+  }
+
+  private appendZero(str) {
+    if (str.length === 1) {
+      str = '0' + str;
+    }
+    return str;
+  }
+
+  getDateStr() {
+    //hell, we need momentjs
+    let date = new Date();
+
+    let day = '' + date.getDay();
+    day = this.appendZero(day);
+
+    let month = '' + (date.getMonth() + 1);
+    month = this.appendZero(month);
+
+    let year = '' + date.getFullYear();
+    year = this.appendZero(year);
+
+    return `${day}.${month}.${year}`;
+  }
+
+  getTimeStr() {
+    //hell, we need momentjs
+
+
+    let date = new Date();
+
+    let hours = '' + date.getHours();
+    hours = this.appendZero(hours);
+
+    let minutes = '' + date.getMinutes();
+    minutes = this.appendZero(minutes);
+
+
+    return `${hours}:${minutes}`;
   }
 
 
