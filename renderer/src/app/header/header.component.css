@@ -21,16 +21,24 @@
   padding: 10px;
 }
 
-.app-controls {
+.toolbar-container {
   width: 100%;
   -webkit-app-region: drag;
-  display: flex;
-  justify-content: center;
   height: 100%;
   padding: 0;
 }
 
 .exit-button {
+  -webkit-app-region: no-drag;
+  margin-left: auto;
+}
+
+.max-button {
+  -webkit-app-region: no-drag;
+  margin-left: auto;
+}
+
+.min-button {
   -webkit-app-region: no-drag;
   margin-left: auto;
 }
@@ -46,4 +54,23 @@
 
 .menu-icon {
 
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.app-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-direction: row;
+  flex-wrap: wrap;
 }

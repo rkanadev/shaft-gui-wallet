@@ -11,6 +11,7 @@ const path = require('path');
 const app = require('./app/app');
 const ipcApi = require('./app/ipc/ipc_api');
 const isDev = require('electron-is-dev');
+const window = require('./app/util/window');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -42,7 +43,8 @@ function createWindow() {
             // in an array if your app supports multi windows, this is the time
             // when you should delete the corresponding element.
             mainWindow = null
-        })
+        });
+        window.injectWindow(mainWindow);
     }, err => {
         logger.error(err);
         process.exit(0)

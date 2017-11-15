@@ -1,8 +1,26 @@
 <div>
-  <mat-toolbar class="app-controls" color="primary">
-    <a (click)="sidenav.open()" mat-button="" class="menu-button">
-      <mat-icon class="menu-icon" color="white">menu</mat-icon>
-    </a>
-    <button class="exit-button" (click)="sidenav.close()" mat-icon-button="clear" aria-label="Exit">X</button>
+  <mat-toolbar class="toolbar-container" color="primary">
+    <div class="header-container">
+      <a (click)="sidenav.open()" mat-button="" class="menu-button">
+        <mat-icon class="menu-icon" color="white">menu</mat-icon>
+      </a>
+      <div class="app-controls">
+        <div>
+          <button (click)="minimizeApp()" mat-button="" mat-icon-button="clear" aria-label="Minimize" class="min-button">
+            <mat-icon class="menu-icon" color="white">minimize</mat-icon>
+          </button>
+        </div>
+        <div>
+          <button (click)="maximizeApp()" mat-button="" mat-icon-button="clear" aria-label="Maximize" class="max-button">
+            <mat-icon class="menu-icon" color="white">fullscreen</mat-icon>
+          </button>
+        </div>
+        <div>
+          <button (click)="closeApp()" mat-button="" mat-icon-button="clear" aria-label="Exit" class="exit-button">
+            <mat-icon class="menu-icon" color="white">close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
   </mat-toolbar>
 </div>

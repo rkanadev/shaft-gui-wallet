@@ -6,6 +6,8 @@ const web3service = require('../service/web3service');
 const configService = require('../service/config-service');
 const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
+const app = require('electron').app;
+const window = require('../util/window');
 
 electron.ipcMain.on('web3-req-channel', (event, arg) => {
     //console.log('IPC: Request from client', event, arg);
@@ -247,6 +249,33 @@ function getAddressLabel(address,) {
     })
 }
 
+function exitApp() {
+    return new Promise((resolve, reject) => {
+        //todo promisify exit
+        setTimeout(function () {
+            app.exit();
+        }, 3000);
+        resolve()
+    })
+}
+
+function minimizeApp() {
+    return new Promise((resolve, reject) => {
+        //todo promisify minimize
+        window.minimize();
+        resolve();
+    })
+}
+
+function maximizeApp() {
+    return new Promise((resolve, reject) => {
+        //todo promisify maximize
+        window.maximize();
+        resolve()
+    })
+}
+
+
 function requestDecoder(data) {
     return new Promise((resolve, reject) => {
         //todo validate data.params
@@ -336,6 +365,21 @@ function requestDecoder(data) {
                 getAddressLabel(data.params.address).then((result) => {
                     resolve(result);
                 }, rej => reject(rej));
+                break;
+            case 'app_exit':
+                exitApp().then((result) => {
+                    resolve(result);
+                }, err => reject(err));
+                break;
+            case 'app_minimize':
+                minimizeApp().then((result) => {
+                    resolve(result);
+                }, err => reject(err));
+                break;
+            case 'app_maximize':
+                maximizeApp().then((result) => {
+                    resolve(result);
+                }, err => reject(err));
                 break;
             default:
                 logger.error('Could not find suitable method for this request');

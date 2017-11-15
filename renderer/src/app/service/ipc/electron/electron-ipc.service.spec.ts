@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
+import {ElectronIPCService} from "./electron-ipc.service";
 
-import { ElectrumIPCService } from './electrum-ipc.service';
 
 describe('ElectrumIPCService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ElectrumIPCService]
+      providers: [ElectronIPCService]
     });
   });
 
-  it('should be created', inject([ElectrumIPCService], (service: ElectrumIPCService) => {
+  it('should be created', inject([ElectronIPCService], (service: ElectronIPCService) => {
     expect(service).toBeTruthy();
   }));
 
