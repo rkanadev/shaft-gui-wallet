@@ -275,6 +275,14 @@ function maximizeApp() {
     })
 }
 
+function unmaximizeApp() {
+    return new Promise((resolve, reject) => {
+        //todo promisify unmaximize
+        window.unmaximize();
+        resolve()
+    })
+}
+
 
 function requestDecoder(data) {
     return new Promise((resolve, reject) => {
@@ -378,6 +386,11 @@ function requestDecoder(data) {
                 break;
             case 'app_maximize':
                 maximizeApp().then((result) => {
+                    resolve(result);
+                }, err => reject(err));
+                break;
+            case 'app_unmaximize':
+                unmaximizeApp().then((result) => {
                     resolve(result);
                 }, err => reject(err));
                 break;

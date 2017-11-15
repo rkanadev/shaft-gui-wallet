@@ -3,7 +3,7 @@ import {Observable} from 'rxjs/Rx';
 import {IntervalObservable} from "rxjs/observable/IntervalObservable";
 import {Subscribable} from "rxjs/Observable";
 import {Subscription} from "rxjs/Subscription";
-import {Web3IPCService} from "../service/ipc/web3/web3-ipc.service";
+import {IPCService} from "../service/ipc/concrete/ipc.service";
 
 @Component({
   selector: 'shaft-footer',
@@ -19,11 +19,10 @@ export class FooterComponent implements OnInit, OnDestroy {
   private error: boolean;
   private tickSubscription: Subscription;
 
-  constructor(private Web3IPCService: Web3IPCService) {
+  constructor(private IPCService: IPCService) {
     this.blockNumber = 0;
     this.peerCount = 0;
 
-    console.log(this.Web3IPCService);
     this.tickSubscription = Observable.interval(1000 * 10).startWith(1)
       .subscribe(() => {
         this.tick();
@@ -33,17 +32,17 @@ export class FooterComponent implements OnInit, OnDestroy {
   }
 
   tick() {
-    this.Web3IPCService.isSyncing().then((result: string) => {
+    this.IPCService.isSyncing().then((result: string) => {
       this.syncing = result;
     }, err => {
       this.syncing = "Not syncing (error)";
     });
 
-    this.Web3IPCService.getPeerCount().then((result: number) => {
+    this.IPCService.getPeerCount().then((result: number) => {
       this.peerCount = result;
     }, err => this.peerCount = 0);
 
-    this.Web3IPCService.getBlockCount().then((result: number) => {
+    this.IPCService.getBlockCount().then((result: number) => {
       this.blockNumber = result;
     }, (err) => {
       this.blockNumber = 0;

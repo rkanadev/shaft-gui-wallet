@@ -1,13 +1,72 @@
-import {Injectable, Pipe} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {AbstractIPCService} from "../abstract/abstract-ipc.service";
 
 @Injectable()
-export class Web3IPCService extends AbstractIPCService {
+export class IPCService extends AbstractIPCService{
 
   constructor() {
     super();
-
   }
+
+  public sendExitApp() {
+    return new Promise((resolve, reject) => {
+      this.request('app_exit').subscribe(result => {
+        if(result.error) {
+          reject(result.error)
+        }
+        resolve(result);
+      }, err => {
+        reject(err)
+      });
+
+    });
+  }
+
+
+  public minimizeApp() {
+    return new Promise((resolve, reject) => {
+      this.request('app_minimize').subscribe(result => {
+        if(result.error) {
+          reject(result.error)
+        }
+        resolve(result);
+      }, err => {
+        reject(err)
+      });
+
+    });
+  }
+
+  public maximizeApp() {
+    return new Promise((resolve, reject) => {
+      this.request('app_maximize').subscribe(result => {
+        if(result.error) {
+          reject(result.error)
+        }
+        resolve(result);
+      }, err => {
+        reject(err)
+      });
+
+    });
+  }
+
+  public unmaximizeApp() {
+    return new Promise((resolve, reject) => {
+      this.request('app_unmaximize').subscribe(result => {
+        if(result.error) {
+          reject(result.error)
+        }
+        resolve(result);
+      }, err => {
+        reject(err)
+      });
+
+    });
+  }
+
+
+
 
   private errCallBack(err) {
     console.log('Could not read response from IPC layer', err);
@@ -171,5 +230,4 @@ export class Web3IPCService extends AbstractIPCService {
       });
     });
   }
-
 }

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Web3IPCService } from './service/ipc/web3/web3-ipc.service';
-import {ElectronIPCService} from "./service/ipc/electron/electron-ipc.service";
+import {IPCService} from "./service/ipc/concrete/ipc.service";
 
 @NgModule({
   imports: [
@@ -12,8 +11,7 @@ import {ElectronIPCService} from "./service/ipc/electron/electron-ipc.service";
   declarations: [ // components for use in THIS module
   ],
   providers: [ // singleton services
-    Web3IPCService,
-    ElectronIPCService
+    IPCService
   ]
 })
 export class CoreModule { }

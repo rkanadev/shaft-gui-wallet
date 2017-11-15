@@ -1,10 +1,10 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
-import {Web3IPCService} from "../service/ipc/web3/web3-ipc.service";
 import BigNumber from "bignumber.js";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import {CreateAccountDialog} from "../accounts/accounts.component";
 import {NotificationService} from "../service/notification/notification.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {IPCService} from "../service/ipc/concrete/ipc.service";
 
 @Component({
   selector: 'app-send',
@@ -21,13 +21,13 @@ export class SendComponent implements OnInit {
   private form: FormGroup;
   private error: boolean;
 
-  constructor(private Web3IPCService: Web3IPCService, public dialog: MatDialog, private fb: FormBuilder) {
+  constructor(private IPCService: IPCService, public dialog: MatDialog, private fb: FormBuilder) {
     this.from = null;
     this.to = null;
     this.value = null;
 
     this.accounts = [];
-    Web3IPCService.getAccounts().then((accounts) => {
+    IPCService.getAccounts().then((accounts) => {
       this.accounts = accounts;
     }, err => {
       console.log('Error:', err);
@@ -63,7 +63,7 @@ export class SendComponent implements OnInit {
 
         let obj = {from: from, to: to, value: valueInWei.toString(10)};
         console.log(obj);
-        this.Web3IPCService.sendTransaction(obj).then(result => {
+        this.IPCService.sendTransaction(obj).then(result => {
           console.log('Successfully sent transaction: ', result);
           console.log(result);
           this.form.controls.from.setValue(null);
@@ -89,7 +89,7 @@ export class SendComponent implements OnInit {
     let inShf = new BigNumber(value);
     //todo validate
     console.log(`Sending from ${from} to ${to} [SHF: ${inShf.toString(10)}, WEI: ${valueInWei.toString(10)}]`);
-    this.Web3IPCService.sendTransaction({from: from, to: to, value: to}).then((receipt) => {
+    this.IPCService.sendTransaction({from: from, to: to, value: to}).then((receipt) => {
       console.log('Success', receipt);
     }, err => {
       console.log('Error while sending transaction', err);
@@ -114,7 +114,7 @@ export class SendDialog {
   private passwordInvalid: boolean;
 
   constructor(public dialogRef: MatDialogRef<CreateAccountDialog>,
-              @Inject(MAT_DIALOG_DATA) public data: any, private Web3IPCService: Web3IPCService, private NotificationService: NotificationService) {
+              @Inject(MAT_DIALOG_DATA) public data: any, private IPCService: IPCService, private NotificationService: NotificationService) {
     this.password = null;
     this.unlocked = false;
     this.unlocking = false;
@@ -122,7 +122,7 @@ export class SendDialog {
   }
 
   public lockAccount(account) {
-    this.Web3IPCService.lockAccount(account).then((locked) => {
+    this.IPCService.lockAccount(account).then((locked) => {
       console.log('Account locked', locked);
     }, err => {
       console.log(err)
@@ -132,7 +132,7 @@ export class SendDialog {
   public unlockAccount(account, password) {
     console.log(this.data);
     this.unlocking = true;
-    this.Web3IPCService.unlockAccount(account, password).then((unlocked: boolean) => {
+    this.IPCService.unlockAccount(account, password).then((unlocked: boolean) => {
       this.unlocking = false;
       console.log('Account unlocked', unlocked);
       this.unlocked = unlocked;

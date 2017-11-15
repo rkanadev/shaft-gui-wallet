@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import {Web3IPCService} from "../service/ipc/web3/web3-ipc.service";
 import {Observable} from "rxjs/Observable";
 import {AccountIconService} from "../service/account-icon/account-icon.service";
+import {IPCService} from "../service/ipc/concrete/ipc.service";
 
 @Component({
   selector: 'app-accounts',
@@ -16,7 +16,7 @@ export class AccountsComponent implements OnInit {
   private password: string;
   private passwordConfirm: string;
 
-  constructor(private Web3IPCService: Web3IPCService, private AccountIconService: AccountIconService, public dialog: MatDialog) {
+  constructor(private IPCService: IPCService, private AccountIconService: AccountIconService, public dialog: MatDialog) {
     this.accounts = [];
   }
 
@@ -30,11 +30,11 @@ export class AccountsComponent implements OnInit {
   }
 
   public getAccounts() {
-    this.Web3IPCService.getAccounts().then(result => {
+    this.IPCService.getAccounts().then(result => {
       //Get balance
       Observable.from(result).subscribe((address: string) => {
-        this.Web3IPCService.getBalance(address).then((result) => {
-          this.Web3IPCService.getAddressLabel(address).then((label) => {
+        this.IPCService.getBalance(address).then((result) => {
+          this.IPCService.getAddressLabel(address).then((label) => {
             this.accounts[address] = {balance: result, label: label, iconBase64Url: this.AccountIconService.getIconBase64(address)}
           }, err => {
             console.log('Could not get label for ', address, '. Probably not set.', err);
@@ -69,7 +69,7 @@ export class AccountsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Submitting create account with password:', result);
-        this.Web3IPCService.newAccount(result).then(result => {
+        this.IPCService.newAccount(result).then(result => {
           console.log('Successfully created account. Address: ', result, result.json());
           this.getAccounts();
         }, error => {

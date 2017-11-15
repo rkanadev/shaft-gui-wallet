@@ -21,10 +21,16 @@ function maximize() {
         window.maximize();
     }
 }
+function unmaximize() {
+    if (window !== null) {
+        window.unmaximize();
+    }
+}
 
 module.exports = {
     getWindow: getWindow,
     minimize: minimize,
     maximize: maximize,
+    unmaximize: unmaximize,
     injectWindow: injectWindow
 };

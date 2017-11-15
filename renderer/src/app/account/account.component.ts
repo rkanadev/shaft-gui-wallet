@@ -1,6 +1,5 @@
 import {Component, Inject, OnInit, ViewChild, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {Web3IPCService} from "../service/ipc/web3/web3-ipc.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
 import {MatPaginator, MatSnackBar} from "@angular/material";
@@ -9,6 +8,7 @@ import {Transaction} from "../model/Transaction";
 import {UnitConvertWeiToEther} from "../util/pipes/unit-converter-pipe";
 import {AccountIconService} from "../service/account-icon/account-icon.service";
 import {NotificationService} from "../service/notification/notification.service";
+import {IPCService} from "../service/ipc/concrete/ipc.service";
 
 @Component({
   selector: 'app-account',
@@ -35,7 +35,7 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  constructor(private route: ActivatedRoute, private Web3IPCService: Web3IPCService, private AccountIconService: AccountIconService, private NotificationService: NotificationService) {
+  constructor(private route: ActivatedRoute, private IPCService: IPCService, private AccountIconService: AccountIconService, private NotificationService: NotificationService) {
     this.transactions = [];
     this.displayedColumns = ['from', 'to', 'amount'];
     this.transactionDatabase = new TransactionDatabase();
@@ -55,7 +55,7 @@ export class AccountComponent implements OnInit {
     if (label === "") {
       this.label = this.address.substr(0, 8);
       label = this.label;
-      this.Web3IPCService.saveAddressLabel(address, label).then(() => {
+      this.IPCService.saveAddressLabel(address, label).then(() => {
         console.log(`Saved empty label for address ${address}`);
         this.labelSavedSnackbar(label);
         this.labelRemovedSnackbar();
@@ -63,7 +63,7 @@ export class AccountComponent implements OnInit {
         console.log('Error saving label ' + label + ' for address ' + address, err);
       });
     } else {
-      this.Web3IPCService.saveAddressLabel(address, label).then(() => {
+      this.IPCService.saveAddressLabel(address, label).then(() => {
         console.log(`Saved label ${label} for address ${address}`);
         this.labelSavedSnackbar(label);
       }, err => {
@@ -80,7 +80,7 @@ export class AccountComponent implements OnInit {
 
       this.accountIconBase64 = this.AccountIconService.getIconBase64(this.address);
 
-      this.Web3IPCService.getAddressLabel(this.address).then((label: string) => {
+      this.IPCService.getAddressLabel(this.address).then((label: string) => {
         console.log('Got label from config: ', label);
         this.label = label;
       }, err => {
@@ -89,13 +89,13 @@ export class AccountComponent implements OnInit {
       });
 
 
-      this.Web3IPCService.getBalance(this.address).then(balance => {
+      this.IPCService.getBalance(this.address).then(balance => {
         this.balance = balance;
       }, error => {
         console.log(error)
       });
 
-      this.Web3IPCService.getTransactionsByAddress(this.address).then((transactions: Transaction[]) => {
+      this.IPCService.getTransactionsByAddress(this.address).then((transactions: Transaction[]) => {
         console.log('Transactions by address ' + this.address + ' : ', transactions);
         this.transactions = transactions;
         this.transactionDatabase.updateData(transactions)
