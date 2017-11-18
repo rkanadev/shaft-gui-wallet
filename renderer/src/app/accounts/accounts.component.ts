@@ -3,12 +3,13 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {Observable} from "rxjs/Observable";
 import {AccountIconService} from "../service/account-icon/account-icon.service";
 import {IPCService} from "../service/ipc/concrete/ipc.service";
+import {NotificationService} from "../service/notification/notification.service";
 
 @Component({
   selector: 'app-accounts',
   templateUrl: './accounts.component.html',
   styleUrls: ['./accounts.component.css'],
-  providers: [AccountIconService]
+  providers: [AccountIconService, NotificationService],
 })
 export class AccountsComponent implements OnInit {
 
@@ -16,7 +17,7 @@ export class AccountsComponent implements OnInit {
   private password: string;
   private passwordConfirm: string;
 
-  constructor(private IPCService: IPCService, private AccountIconService: AccountIconService, public dialog: MatDialog) {
+  constructor(private IPCService: IPCService, private AccountIconService: AccountIconService, public dialog: MatDialog, private NotificationService: NotificationService) {
     this.accounts = [];
   }
 
@@ -35,18 +36,26 @@ export class AccountsComponent implements OnInit {
       Observable.from(result).subscribe((address: string) => {
         this.IPCService.getBalance(address).then((result) => {
           this.IPCService.getAddressLabel(address).then((label) => {
-            this.accounts[address] = {balance: result, label: label, iconBase64Url: this.AccountIconService.getIconBase64(address)}
+            this.accounts[address] = {
+              balance: result,
+              label: label,
+              iconBase64Url: this.AccountIconService.getIconBase64(address)
+            }
           }, err => {
-            console.log('Could not get label for ', address, '. Probably not set.', err);
-            this.accounts[address] = {balance: result, label: address.substr(0, 8), iconBase64Url: this.AccountIconService.getIconBase64(address)}
+            console.log('Could not get label for ' + address + '. Probably not set.' + err);
+            this.accounts[address] = {
+              balance: result,
+              label: address.substr(0, 8),
+              iconBase64Url: this.AccountIconService.getIconBase64(address)
+            }
           });
         }, err => {
-          console.log('Error', err);
+          this.NotificationService.notificate('Could not get balance for' + err);
           this.accounts[address] = {balance: result, error: err}
         })
       });
     }, error => {
-      console.log(error);
+      this.NotificationService.notificate("Could not get accounts from node: " + error);
     });
   }
 
@@ -68,12 +77,11 @@ export class AccountsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Submitting create account with password:', result);
         this.IPCService.newAccount(result).then(result => {
-          console.log('Successfully created account. Address: ', result, result.json());
+          this.NotificationService.notificate('Successfully created account. Address: ' + result);
           this.getAccounts();
         }, error => {
-          console.log('Error while creating account', error);
+          this.NotificationService.notificate('Error while creating account: ' + error);
         })
       }
     });
