@@ -9,7 +9,8 @@ import {IPCService} from "../service/ipc/concrete/ipc.service";
 @Component({
   selector: 'app-send',
   templateUrl: './send.component.html',
-  styleUrls: ['./send.component.css']
+  styleUrls: ['./send.component.css'],
+  providers: [NotificationService]
 })
 export class SendComponent implements OnInit {
 
@@ -21,7 +22,7 @@ export class SendComponent implements OnInit {
   private form: FormGroup;
   private error: boolean;
 
-  constructor(private IPCService: IPCService, public dialog: MatDialog, private fb: FormBuilder) {
+  constructor(private IPCService: IPCService, public dialog: MatDialog, private fb: FormBuilder, private NotificationService:NotificationService) {
     this.from = null;
     this.to = null;
     this.value = null;
@@ -30,7 +31,7 @@ export class SendComponent implements OnInit {
     IPCService.getAccounts().then((accounts) => {
       this.accounts = accounts;
     }, err => {
-      console.log('Error:', err);
+      this.NotificationService.notificate("Could not account list: " + err);
     })
 
 
@@ -64,11 +65,12 @@ export class SendComponent implements OnInit {
         let obj = {from: from, to: to, value: valueInWei.toString(10)};
         console.log(obj);
         this.IPCService.sendTransaction(obj).then(result => {
-          console.log('Successfully sent transaction: ', result);
+          this.NotificationService.notificate('Successfully sent transaction, txid: ' + result);
           console.log(result);
-          this.form.controls.from.setValue(null);
-          this.form.controls.to.setValue(null);
-          this.form.controls.value.setValue(null);
+          this.form.reset();
+          this.form.controls.from.setErrors(null);
+          this.form.controls.to.setErrors(null);
+          this.form.controls.value.setErrors(null);
         }, error => {
           console.log('Error pushing transaction:', error);
         })

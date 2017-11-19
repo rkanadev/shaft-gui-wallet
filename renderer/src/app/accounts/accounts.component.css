@@ -19,9 +19,8 @@
   padding-bottom: 25px;
   padding-left: 25px;
   margin-bottom: 25px;
-}
-
-.account_card {
+  width: 200px;
+}  .account_card {
   text-decoration: none;
   color: black;
 }
@@ -33,5 +32,10 @@
 }
 
 .account-icon {
+  text-align: center;
+}
 
+
+.label {
+  word-wrap: break-word;
 }
