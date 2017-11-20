@@ -1,6 +1,6 @@
 {
   "name": "shaft-gui-wallet-ui",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -26,12 +26,14 @@
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/router": "^4.2.4",
     "@material/theme": "^0.4.0",
+    "@types/underscore": "^1.8.5",
     "bignumber.js": "^4.1.0",
     "core-js": "^2.4.1",
     "ethereum-blockies": "^0.1.1",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.4.2",
     "sha1": "^1.1.1",
+    "underscore": "^1.8.3",
     "web3": "^1.0.0-beta.14",
     "zone.js": "^0.8.14"
   },

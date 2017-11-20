@@ -1,0 +1,10 @@
+.transaction_detail_dialog {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.transaction_container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+}

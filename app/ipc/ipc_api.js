@@ -8,6 +8,7 @@ const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
 const app = require('electron').app;
 const window = require('../util/window');
+const _ = require('underscore');
 
 electron.ipcMain.on('web3-req-channel', (event, arg) => {
     //console.log('IPC: Request from client', event, arg);
@@ -175,6 +176,25 @@ function getTransactionByAddress(address) {
     })
 }
 
+function getTransactionByHash(address) {
+    return new Promise((resolve, reject) => {
+        let web3 = web3service.getWeb3();
+
+        if (!web3) {
+            reject('No web3')
+        }
+        web3.eth.getTransaction(address, function (err, transaction) {
+            if (err) {
+                reject(err);
+            } else {
+                transaction.value = transaction.value.toString(10);
+                transaction.gasPrice = transaction.gasPrice.toString(10);
+                resolve(transaction);
+            }
+        });
+    })
+}
+
 function getBalance(address) {
     return new Promise((resolve, reject) => {
         let web3 = web3service.getWeb3();
@@ -275,6 +295,52 @@ function maximizeApp() {
     })
 }
 
+function getMinedBlocks() {
+    return new Promise((resolve, reject) => {
+        let web3 = web3service.getWeb3();
+
+        if (!web3) {
+            reject('web3 is null')
+        }
+
+
+        web3.eth.getAccounts(function (err, accounts) {
+                if (err) {
+                    reject(err);
+                } else {
+                    let promises = [];
+                    let minedBlocks = [];
+                    accounts.forEach((account) => {
+                        promises.push(new Promise((resolvee, rejectt) => {
+                            fetch('https://testnet.explorer.shaft.sh/api/address/' + account + '/mined')
+                                .then(res => res.json())
+                                .then(json => {
+                                        minedBlocks.push(json)
+                                        resolvee();
+                                    }
+                                )
+                                .catch(err => {
+                                    rejectt(err)
+                                })
+
+                        }));
+
+                    });
+
+                    Promise.all(promises).then((result) => {
+                        let flattened = _.flatten(minedBlocks);
+                        resolve(flattened);
+                    }, err => {
+                        reject(err)
+                    })
+
+                }
+            }
+        )
+    });
+}
+
+
 function unmaximizeApp() {
     return new Promise((resolve, reject) => {
         //todo promisify unmaximize
@@ -357,6 +423,14 @@ function requestDecoder(data) {
                     resolve(result);
                 }, rej => reject(rej));
                 break;
+            case 'get_transaction_by_hash':
+                if (!data.params) {
+                    reject('No params')
+                }
+                getTransactionByHash(data.params).then((result) => {
+                    resolve(result);
+                }, rej => reject(rej));
+                break;
             case 'save_address_label':
                 if (!data.params && (!data.params.address || !data.params.label)) {
                     reject('No params')
@@ -391,6 +465,11 @@ function requestDecoder(data) {
                 break;
             case 'app_unmaximize':
                 unmaximizeApp().then((result) => {
+                    resolve(result);
+                }, err => reject(err));
+                break;
+            case 'get_mined_blocks':
+                getMinedBlocks().then((result) => {
                     resolve(result);
                 }, err => reject(err));
                 break;

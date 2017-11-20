@@ -1,11 +1,59 @@
 .home {
-  margin: 0 auto;
-  padding: 50px;
-  width:100%;
+  width: 100%;
   height: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  display: flex;
+  padding-top: 20px;
+  padding-bottom: 0px;
 }
 
 .accounts {
-  padding-top:10px;
+  padding-top: 10px;
+}
+
+.transactions {
+  display: flex;
+  width: 50%;
+  height: 50%;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  text-align: center;
+  font-size: 140%;
+}
+
+.info {
+  width: 50%;
+  height: 100%;
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;;
+}
+
+.tx-card {
+  padding: 10px;
+  word-break: break-all;
+}
+
+.tx-scroll-container {
+  display: block;
+  height: 80vh;
+  margin: 0 auto;
+  overflow: auto;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.sub-heading {
+  font-size: 20pt;
+}
+
+.heading {
+  font-size: 40pt;
+  font-weight: 100
+}
+
+.mined {
+  display: inline-block;
 }

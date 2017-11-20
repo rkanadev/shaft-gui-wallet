@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {AbstractIPCService} from "../abstract/abstract-ipc.service";
 
 @Injectable()
-export class IPCService extends AbstractIPCService{
+export class IPCService extends AbstractIPCService {
 
   constructor() {
     super();
@@ -11,7 +11,7 @@ export class IPCService extends AbstractIPCService{
   public sendExitApp() {
     return new Promise((resolve, reject) => {
       this.request('app_exit').subscribe(result => {
-        if(result.error) {
+        if (result.error) {
           reject(result.error)
         }
         resolve(result);
@@ -26,7 +26,7 @@ export class IPCService extends AbstractIPCService{
   public minimizeApp() {
     return new Promise((resolve, reject) => {
       this.request('app_minimize').subscribe(result => {
-        if(result.error) {
+        if (result.error) {
           reject(result.error)
         }
         resolve(result);
@@ -40,7 +40,7 @@ export class IPCService extends AbstractIPCService{
   public maximizeApp() {
     return new Promise((resolve, reject) => {
       this.request('app_maximize').subscribe(result => {
-        if(result.error) {
+        if (result.error) {
           reject(result.error)
         }
         resolve(result);
@@ -54,7 +54,7 @@ export class IPCService extends AbstractIPCService{
   public unmaximizeApp() {
     return new Promise((resolve, reject) => {
       this.request('app_unmaximize').subscribe(result => {
-        if(result.error) {
+        if (result.error) {
           reject(result.error)
         }
         resolve(result);
@@ -64,8 +64,6 @@ export class IPCService extends AbstractIPCService{
 
     });
   }
-
-
 
 
   private errCallBack(err) {
@@ -197,6 +195,23 @@ export class IPCService extends AbstractIPCService{
     });
   }
 
+  public getTransactionByHash(txHash: string) {
+    return new Promise((resolve, reject) => {
+      this.request('get_transaction_by_hash', txHash).subscribe(result => {
+        if (result.error) {
+          reject(result.error)
+        }
+        let res = result.result;
+        if (result == null) {
+          reject(`Get transactions by hash ${txHash} returned null`);
+        }
+        resolve(res);
+      }, err => {
+        reject(err)
+      });
+    });
+  }
+
   public saveAddressLabel(address: string, label: string) {
     return new Promise((resolve, reject) => {
       this.request('save_address_label', {address: address, label: label}).subscribe(result => {
@@ -223,6 +238,23 @@ export class IPCService extends AbstractIPCService{
         let res = result.result;
         if (result == null) {
           reject('Get address label returned null');
+        }
+        resolve(res);
+      }, err => {
+        reject(err)
+      });
+    });
+  }
+
+  public getMinedBlocks() {
+    return new Promise((resolve, reject) => {
+      this.request('get_mined_blocks').subscribe(result => {
+        if (result.error) {
+          reject(result.error)
+        }
+        let res = result.result;
+        if (result == null) {
+          reject('Get mined blocks returned null');
         }
         resolve(res);
       }, err => {

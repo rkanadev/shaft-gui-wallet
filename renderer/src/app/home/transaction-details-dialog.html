@@ -1,0 +1,18 @@
+<div class="transaction_detail_dialog">
+  <h1 mat-dialog-title>{{transaction.hash}}</h1>
+  <div mat-dialog-content>
+
+    <div class="transaction_container">
+      <span>Hash: <span>{{transaction.hash}}</span></span>
+      <span>Block hash: <span>{{transaction.blockHash}}</span></span>
+      <span>Block number: <span>{{transaction.blockNumber}}</span></span>
+      <span>From: <span>{{transaction.from}}</span></span>
+      <span>To: <span>{{transaction.to}}</span></span>
+      <span>Amount: <span>{{fromBigNumberToDecimal(transaction.value)}}</span></span>
+      <span>Gas: <span>{{transaction.gas}}</span></span>
+      <span>Gas price: <span>{{transaction.gasPrice}}</span></span>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+  </div>
+</div>

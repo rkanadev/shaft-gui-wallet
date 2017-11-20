@@ -1,23 +1,40 @@
 <div class="home">
 
   <div class="info">
-    <span>Total balance</span>
-    <div *ngIf="getAccountsAsArray().length == 0">0 SHF</div>
-    <div *ngIf="getAccountsAsArray().length > 0">
-        <div>{{getTotalBalance()}}</div>
+    <div class="balance">
+      <span class="sub-heading">Total balance:</span>
+      <div *ngIf="getAccountsAsArray().length == 0">0 SHF</div>
+      <div *ngIf="getAccountsAsArray().length > 0">
+        <div class="heading">{{getTotalBalance()}} SHF</div>
+      </div>
+    </div>
+
+    <div class="mined">
+      <span class="sub-heading">Mined:</span><br>
+      <span class="heading">{{minedBlocks.length}} BLOCKS</span>
     </div>
   </div>
 
-  <div class="accounts">
+  <div class="transactions">
+    <span>Transactions</span>
+    <div class="tx-scroll-container">
+      <div *ngFor="let tx of getAllTransactions()">
+        <div class="tx-card" (click)="openTransactionDetailsDialog(tx.hash)">
+          <mat-card>
+            <mat-card-header>
+              <span style="font-size: 80%;font-weight: 400">{{tx.hash}}</span>
+            </mat-card-header>
+            <mat-card-content>
+              <div style="text-align: left;padding:10px;display: flex;flex-wrap: wrap;flex-direction: column;justify-content: center;">
+                <span>From: {{tx.from}}</span>
+                <span>To: {{tx.to}}</span>
+                <span>Amount: {{tx.value | weiToEther}} SHF</span>
+              </div>
 
-  </div>
-
-  <div>
-    <div *ngIf="getAccountsAsArray() === 0">
-      <p>No accounts created yet</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
     </div>
-    <div>
-    </div>
   </div>
-
 </div>

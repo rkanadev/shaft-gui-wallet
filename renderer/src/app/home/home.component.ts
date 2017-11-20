@@ -1,25 +1,40 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {debug} from "util";
-import BigNumber from "bignumber.js";
 import {UnitConvertWeiToEther} from "../util/pipes/unit-converter-pipe";
 import {IPCService} from "../service/ipc/concrete/ipc.service";
+import {Transaction} from "../model/Transaction";
+import {NotificationService} from "../service/notification/notification.service";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
+import {CreateAccountDialog} from "../accounts/accounts.component";
+import BigNumber from "bignumber.js";
 
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [UnitConvertWeiToEther]
+  providers: [UnitConvertWeiToEther, NotificationService]
 })
 
 export class HomeComponent implements OnInit {
 
   public accounts: object;
+  public transactions: Transaction[];
+  public minedBlocks: {}[];
 
-  constructor(private IPCService: IPCService, private UnitConvertWeiToEther: UnitConvertWeiToEther) {
+  constructor(private IPCService: IPCService, private UnitConvertWeiToEther: UnitConvertWeiToEther, private NotificationService: NotificationService, public dialog: MatDialog) {
     console.log('Home loaded');
     this.accounts = {};
+    this.transactions = [];
+    this.minedBlocks = [];
+
+    this.IPCService.getMinedBlocks().then((result: any) => {
+      this.minedBlocks = result;
+    }, err => {
+      this.NotificationService.notificate("Could not get mined blocks: " + err);
+    });
+
 
     this.IPCService.getAccounts().then(accounts => {
       accounts.forEach((account) => {
@@ -28,6 +43,11 @@ export class HomeComponent implements OnInit {
           this.accounts[account].balance = balance;
         }, function (error) {
           console.log(error);
+        });
+        this.IPCService.getTransactionsByAddress(account).then((result) => {
+          this.accounts[account].transactions = result;
+        }, error => {
+          this.NotificationService.notificate('Unable to get transactions by address ' + account)
         })
       });
 
@@ -35,12 +55,18 @@ export class HomeComponent implements OnInit {
       console.log(error);
       this.accounts = []
     });
+  }
+
+
+  ngOnInit() {
+
+    console.log('Addresses should be loaded');
+    console.log(JSON.stringify(this.accounts));
 
   }
 
   getAccountsAsArray(): string[] {
     let res = Object.keys(this.accounts);
-    console.log('res', res);
     return res;
   }
 
@@ -54,10 +80,84 @@ export class HomeComponent implements OnInit {
     return result.toString();
   }
 
-  ngOnInit() {
+  getAllTransactions() {
+    let result = [];
+    let self = this;
+    Object.keys(this.accounts).forEach(function (account) {
+      let transactions = self.accounts[account].transactions;
+      if (transactions) {
+        console.log('Account', account, JSON.stringify(transactions));
+        transactions.forEach((tx) => {
+          result.push(tx)
+        });
+      }
+    });
+    return result;
+  }
 
-    console.log('Home loaded');
 
+  isOwnAddress(address) {
+    let result = false;
+    Object.keys(this.accounts).forEach(function (account) {
+      if (account === address) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
+
+  openTransactionDetailsDialog(txHash): void {
+    this.IPCService.getTransactionByHash(txHash).then((tx: Transaction) => {
+
+
+        let dialogRef = this.dialog.open(TransactionDetailsDialog, {
+          data: {transaction: tx}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          /*if (result) {
+            this.IPCService.newAccount(result).then(result => {
+              this.NotificationService.notificate('Successfully created account. Address: ' + result);
+              this.getAccounts();
+            }, error => {
+              this.NotificationService.notificate('Error while creating account: ' + error);
+            })
+          }*/
+        });
+      },
+      err => {
+        this.NotificationService.notificate(`Could not get transaction with hash: ${txHash}. Error: ${err}`);
+      });
+
+
+  }
+}
+
+
+@Component({
+  selector: 'transaction-details-dialog',
+  templateUrl: 'transaction-details-dialog.html',
+  styleUrls: ['./transaction-details-dialog.css']
+})
+export class TransactionDetailsDialog {
+  transaction: any;
+
+  constructor(public dialogRef: MatDialogRef<TransactionDetailsDialog>,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.transaction = data.transaction;
+  }
+
+  submitTransactionDetailsDialog() {
+    this.dialogRef.close();
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  fromBigNumberToDecimal(bigNumber) {
+    return new BigNumber(bigNumber).toString(10);
   }
 
 }
