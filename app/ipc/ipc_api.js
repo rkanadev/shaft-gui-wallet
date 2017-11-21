@@ -58,17 +58,14 @@ function init() {
                     if (err) {
                         logger.error("Could not find block with hash " + blockHash + " Error:" + err)
                     } else {
-                        console.log(block);
                         getAccounts().then((accounts) => {
-                            console.log(accounts);
                             //If we mined block
                             if (accounts.some(account => block.miner === account)) {
-                                console.log('You have found block! Yay');
                                 pushNotification("YAY! Successfully mined block with hash " + block.hash);
                             }
 
                         }, err => {
-                            console.log(err);
+                            logger.error(err);
                         })
                     }
                 })

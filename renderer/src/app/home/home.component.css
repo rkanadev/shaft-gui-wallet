@@ -15,7 +15,6 @@
 .transactions {
   display: flex;
   width: 50%;
-  height: 50%;
   justify-content: center;
   flex-direction: column;
   flex-wrap: wrap;
@@ -29,17 +28,23 @@
   padding: 10px;
   text-align: center;
   display: flex;
-  justify-content: space-around;;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .info_item {
   text-align: center;
   border: 1px solid black;
   border-radius: 0;
-  padding: 20px;
+  padding: 10px;
+  margin: 30px;
+  margin-top:10px;
   display: flex;
+  min-width: 100px;
+  min-height: 100px;
   flex-direction: column;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .tx-card {
@@ -57,11 +62,11 @@
 }
 
 .sub-heading {
-  font-size: 10pt;
+  font-size: 15pt;
 }
 
 .heading {
-  font-size: 20pt;
+  font-size: 15pt;
   font-weight: 100
 }
 

@@ -1,6 +1,7 @@
 <div class="send">
   <div *ngIf="accounts.length > 0">
     <form novalidate class="send-form" [formGroup]="form">
+      <span style="text-align: center"><p>Spend some shafts</p></span>
       <mat-form-field [style.width]="'100%'" class="send-form_field">
         <mat-select placeholder="Choose from" formControlName="from" name="from">
           <mat-option *ngFor="let account of accounts" [value]="account">
@@ -18,16 +19,17 @@
       </mat-form-field>
       <div>
         <p>
-          <button [disabled]="form.invalid" (click)="openSendDialog()" mat-raised-button mat-button="primary" color="primary">Send
+          <button [disabled]="form.invalid" (click)="openSendDialog()" mat-raised-button mat-button="primary"
+                  color="primary">Send
           </button>
-<!--
-          <button style="background-color: #64b4ed" (click)="advanced=!advanced" mat-raised-button mat-button="primary" color="primary">Advanced</button>
--->
+          <!--
+                    <button style="background-color: #64b4ed" (click)="advanced=!advanced" mat-raised-button mat-button="primary" color="primary">Advanced</button>
+          -->
         </p>
       </div>
     </form>
   </div>
   <div *ngIf="accounts.length ==  0">
-    No account created
+    No accounts created
   </div>
 </div>

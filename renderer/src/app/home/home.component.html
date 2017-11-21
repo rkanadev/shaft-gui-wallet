@@ -1,22 +1,27 @@
 <div class="home">
 
   <div class="info">
-    <div class="balance info_item">
+    <div>
       <span class="sub-heading">Total balance</span>
-      <div *ngIf="getAccountsAsArray().length == 0">0 SHF</div>
-      <div *ngIf="getAccountsAsArray().length > 0">
-        <div class="heading">{{getTotalBalance()}} SHF</div>
+      <div class="balance info_item">
+        <div *ngIf="getAccountsAsArray().length == 0" class="heading">0 SHF</div>
+        <div *ngIf="getAccountsAsArray().length > 0">
+          <div class="heading">{{getTotalBalance()}} SHF</div>
+        </div>
       </div>
     </div>
 
-    <div class="mined info_item">
+    <div>
       <span class="sub-heading">Total blocks mined</span>
-      <span class="heading">{{minedBlocks.length}} BLOCKS</span>
+      <div class="mined info_item">
+        <span class="heading">{{minedBlocks.length}} BLOCKS</span>
+      </div>
     </div>
-
-    <div class="difficulty info_item">
+    <div>
       <span class="sub-heading">Difficulty</span>
-      <span class="heading">{{getDiffHumanReadable()}} G</span>
+      <div class="difficulty info_item">
+        <span class="heading">{{getDiffHumanReadable()}}G</span>
+      </div>
     </div>
   </div>
 
@@ -30,7 +35,8 @@
               <span style="font-size: 80%;font-weight: 400">{{tx.hash}}</span>
             </mat-card-header>
             <mat-card-content>
-              <div style="text-align: left;padding:10px;display: flex;flex-wrap: wrap;flex-direction: column;justify-content: center;">
+              <div
+                style="text-align: left;padding:10px;display: flex;flex-wrap: wrap;flex-direction: column;justify-content: center;">
                 <span>From: {{tx.from}}</span>
                 <span>To: {{tx.to}}</span>
                 <span>Amount: {{tx.value | weiToEther}} SHF</span>
