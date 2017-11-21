@@ -161,6 +161,7 @@ function onNodeStartError(err, reject) {
 function getIpcPath(testnet) {
     let ipcPath = pathsService.getShaftDir();
     if(isPlatformWindows()) {
+        //todo move logic to pathService
         ipcPath = '\\\\.\\pipe\\';
         ipcPath += '\\geth.ipc';
         //for some reason windows geth always create file in \\.\pipe\geth.ipc
