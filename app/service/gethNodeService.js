@@ -160,22 +160,20 @@ function onNodeStartError(err, reject) {
 
 function getIpcPath(testnet) {
     let ipcPath = pathsService.getShaftDir();
+    if(isPlatformWindows()) {
+        ipcPath = '\\\\.\\pipe\\';
+        ipcPath += '\\geth.ipc';
+        //for some reason windows geth always create file in \\.\pipe\geth.ipc
+        return ipcPath;
+    }
     if (testnet) {
         if (isPlatformLinux()) {
             ipcPath +=  '/testnet' + '/geth.ipc';
-        }
-        if (isPlatformWindows()) {
-            ipcPath = '\\\\\\\\.\\\\pipe\\\\';
-            ipcPath += '\\testnet' + '\\geth.ipc';
         }
         return ipcPath;
     } else {
         if (isPlatformLinux()) {
             ipcPath += '/geth.ipc'
-        }
-        if (isPlatformWindows()) {
-            ipcPath = '\\\\\\\\.\\\\pipe\\\\';
-            ipcPath += '\\geth.ipc'
         }
         return ipcPath;
     }
