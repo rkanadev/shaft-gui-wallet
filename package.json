@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "build": "cd renderer && npm run build",
-    "build-binaries": "cd renderer && npm run build && cd .. && electron-builder --config build.json -l"
+    "build-binaries": "cd renderer && npm run build && cd .. && electron-builder --config build.json -lw"
   },
   "repository": "https://code.shaft.sh/shaftsh/shaft",
   "keywords": [
