@@ -47,7 +47,7 @@ function init() {
         executablePath = '\\' + fileName;
         logfile = '\\shaft-gui.log';
         nodeLogFile = '\\node.log';
-        configFile = '/config.json';
+        configFile = '\\config.json';
     }
 
     paths = {
