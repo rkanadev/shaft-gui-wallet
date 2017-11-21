@@ -24,7 +24,7 @@ function init() {
     if (isPlatformLinux()) {
         platform = 'linux';
         buildUrl = buildsConfig.geth[platform].x64.latest.url;
-        sha256 = buildsConfig.geth[platform].x64.latest.sha256
+        sha256 = buildsConfig.geth[platform].x64.latest.sha256;
         fileName = buildUrl.substring(buildUrl.lastIndexOf("/")).substr(1);
         homeDir = process.env.HOME;
         shaftDir = '/.shaft';

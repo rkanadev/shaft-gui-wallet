@@ -228,7 +228,7 @@ function checkOrCreateFolders() {
         let isBinariesDirExists = fs.existsSync(binariesDir);
         if (!isGUIdirExist || !isBinariesDirExists) {
             makeDir(binariesDir).then(() => {
-                logger.debug("Successfully created " + binariesDir + " folder.")
+                logger.debug("Successfully created " + binariesDir + " folder.");
                 resolve()
             }, err => {
                 logger.error(err);

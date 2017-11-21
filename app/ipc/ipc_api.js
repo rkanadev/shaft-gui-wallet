@@ -50,7 +50,7 @@ function isSyncing() {
                     if (sync) {
                         resolve('Syncing');
                     } else {
-                        resolve('Not syncing');
+                        resolve('Synced');
                     }
                 } else if (typeof sync === 'object') {
                     //node is syncing, obj, see web3api
