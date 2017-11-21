@@ -75,24 +75,26 @@ function startNode(ipcPath, execPath, sha256, nodeLogFile) {
             web3Service.init(ipcPath);
             resolve();
         } else {
-            logger.info('IPC file not found, starting node')
+            logger.info('IPC file not found, starting node');
             let proc = null;
             let args = [];
 
             if (appConfig.testnet) {
-                logger.info('Starting in network: testnet')
+                logger.info('Starting in network: testnet');
+                args.push('--bootnodes=enode://5618ab2920ed59e0312b7c70af7f8c1a83db5990e0c1df0a3ac3d8c326f640b3038f24da2d1264fca70dd5faa9c41e38c3fa28fd9553aa8284310be05853a1d7@137.74.162.146:30304,enode://8401883922960f919b663b2109029cfc3be5cac68a2a6386fdfd404c834fa517c4ca970e8d9463a4b632cfb2031e661cf6630b87f23fff2ee0de86a526a3845f@137.74.162.146:30308');
                 args.push('--testnet')
             } else {
+                //todo add mainnet bootnodes
                 logger.info('Starting in network: mainnet')
             }
             if (appConfig.rpc) {
-                logger.info('With RPC enabled.')
+                logger.info('With RPC enabled.');
                 args.push('--rpc')
             }
             //Check sha
             checkHashsumOfFile(execPath, sha256).then(() => {
                 proc = spawn(execPath, args);
-                logger.debug('Checksum is valid, starting node')
+                logger.debug('Checksum is valid, starting node');
                 // node has a problem starting
                 proc.once('error', (err) => {
                     logger.error('Node startup error:' + err);
