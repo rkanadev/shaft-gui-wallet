@@ -1,17 +1,22 @@
 <div class="home">
 
   <div class="info">
-    <div class="balance">
-      <span class="sub-heading">Total balance:</span>
+    <div class="balance info_item">
+      <span class="sub-heading">Total balance</span>
       <div *ngIf="getAccountsAsArray().length == 0">0 SHF</div>
       <div *ngIf="getAccountsAsArray().length > 0">
         <div class="heading">{{getTotalBalance()}} SHF</div>
       </div>
     </div>
 
-    <div class="mined">
-      <span class="sub-heading">Mined:</span><br>
+    <div class="mined info_item">
+      <span class="sub-heading">Total blocks mined</span>
       <span class="heading">{{minedBlocks.length}} BLOCKS</span>
+    </div>
+
+    <div class="difficulty info_item">
+      <span class="sub-heading">Difficulty</span>
+      <span class="heading">{{getDiffHumanReadable()}} G</span>
     </div>
   </div>
 

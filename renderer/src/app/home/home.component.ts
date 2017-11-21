@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   public accounts: object;
   public transactions: Transaction[];
   public minedBlocks: {}[];
+  public difficulty: number;
 
   constructor(private IPCService: IPCService, private UnitConvertWeiToEther: UnitConvertWeiToEther, private NotificationService: NotificationService, public dialog: MatDialog) {
     console.log('Home loaded');
@@ -33,6 +34,13 @@ export class HomeComponent implements OnInit {
       this.minedBlocks = result;
     }, err => {
       this.NotificationService.notificate("Could not get mined blocks: " + err);
+    });
+
+    this.IPCService.getDifficulty().then((diff: number) => {
+      this.difficulty = diff;
+    }, err => {
+      this.NotificationService.notificate("Could not get difficulty");
+      this.difficulty = null
     });
 
 
@@ -52,17 +60,25 @@ export class HomeComponent implements OnInit {
       });
 
     }, error => {
+      this.NotificationService.notificate('Could not get all accounts: ' + error);
       console.log(error);
       this.accounts = []
     });
   }
 
+  public getDiffHumanReadable() {
+    if (!this.difficulty) {
+      return "N/A";
+    } else {
+      let diff = this.difficulty;
+      diff = diff / 1000; // K
+      diff = diff / 1000; // M
+      return Math.round(diff * 100) / 100;
+    }
+  }
+
 
   ngOnInit() {
-
-    console.log('Addresses should be loaded');
-    console.log(JSON.stringify(this.accounts));
-
   }
 
   getAccountsAsArray(): string[] {

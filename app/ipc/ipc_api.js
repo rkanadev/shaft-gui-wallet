@@ -213,6 +213,23 @@ function getBalance(address) {
     });
 }
 
+function getDifficulty() {
+    return new Promise((resolve, reject) => {
+        let web3 = web3service.getWeb3();
+
+        if (!web3) {
+            reject('No web3')
+        }
+        web3.eth.getBlock('latest', function (err, block) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(block.difficulty.toString(10));
+            }
+        });
+    });
+}
+
 function sendTransaction(transactionData) {
     return new Promise((resolve, reject) => {
         let web3 = web3service.getWeb3();
@@ -380,6 +397,11 @@ function requestDecoder(data) {
                     reject('No params')
                 }
                 getBalance(data.params).then((result) => {
+                    resolve(result);
+                }, rej => reject(rej));
+                break;
+            case 'get_difficulty':
+                getDifficulty().then((result) => {
                     resolve(result);
                 }, rej => reject(rej));
                 break;

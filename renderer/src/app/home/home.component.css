@@ -5,6 +5,7 @@
   display: flex;
   padding-top: 20px;
   padding-bottom: 0px;
+  text-align: left;
 }
 
 .accounts {
@@ -31,6 +32,16 @@
   justify-content: space-around;;
 }
 
+.info_item {
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
 .tx-card {
   padding: 10px;
   word-break: break-all;
@@ -46,14 +57,17 @@
 }
 
 .sub-heading {
-  font-size: 20pt;
+  font-size: 10pt;
 }
 
 .heading {
-  font-size: 40pt;
+  font-size: 20pt;
   font-weight: 100
 }
 
 .mined {
-  display: inline-block;
+}
+
+.balance {
+  text-align: center;
 }

@@ -262,4 +262,21 @@ export class IPCService extends AbstractIPCService {
       });
     });
   }
+
+  public getDifficulty() {
+    return new Promise((resolve, reject) => {
+      this.request('get_difficulty').subscribe(result => {
+        if (result.error) {
+          reject(result.error)
+        }
+        let res = result.result;
+        if (result == null) {
+          reject('Get difficulty returned null');
+        }
+        resolve(res);
+      }, err => {
+        reject(err)
+      });
+    });
+  }
 }
