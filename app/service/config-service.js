@@ -6,7 +6,7 @@ const pathsService = require('./paths-service');
 const fs = require('fs');
 const jsonfile = require('jsonfile');
 const logger = require('../util/logger').getLogger("ConfigService");
-const mkdirp = require(mkdirp);
+const mkdirp = require('mkdirp');
 const configPath = pathsService.getConfigPath();
 let config;
 
