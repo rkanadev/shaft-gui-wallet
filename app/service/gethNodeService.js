@@ -165,6 +165,7 @@ function getIpcPath(testnet) {
             ipcPath +=  '/testnet' + '/geth.ipc';
         }
         if (isPlatformWindows()) {
+            ipcPath = '\\\\\\\\.\\\\pipe\\\\';
             ipcPath += '\\testnet' + '\\geth.ipc';
         }
         return ipcPath;
@@ -173,6 +174,7 @@ function getIpcPath(testnet) {
             ipcPath += '/geth.ipc'
         }
         if (isPlatformWindows()) {
+            ipcPath = '\\\\\\\\.\\\\pipe\\\\';
             ipcPath += '\\geth.ipc'
         }
         return ipcPath;
