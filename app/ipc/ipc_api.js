@@ -9,27 +9,82 @@ const fetch = require('node-fetch');
 const app = require('electron').app;
 const window = require('../util/window');
 const _ = require('underscore');
+let sender;
 
-electron.ipcMain.on('web3-req-channel', (event, arg) => {
-    //console.log('IPC: Request from client', event, arg);
-    logger.silly('Message from web3-req-channel:' + JSON.stringify(arg));
-    let result = requestDecoder(arg.data).then((result) => {
-        let resultBody = {id: arg.id, result: result};
-        logger.silly('Message to web3-res-channel:' + JSON.stringify(resultBody));
-        event.sender.send('web3-res-channel', resultBody);
-    }, (error) => {
-        logger.error('Unable to process process request: ' + error);
-        let resultError = error;
-        if (error.message) {
-            resultError = error.message;
-            if (error.stack) {
-                logger.silly(error.stack);
+function init() {
+    logger.info("Initializing IPC layer");
+    electron.ipcMain.on('web3-req-channel', (event, arg) => {
+        sender = event.sender;
+        //console.log('IPC: Request from client', event, arg);
+        logger.silly('Message from web3-req-channel:' + JSON.stringify(arg));
+        let result = requestDecoder(arg.data).then((result) => {
+            let resultBody = {id: arg.id, result: result};
+            logger.silly('Message to web3-res-channel:' + JSON.stringify(resultBody));
+            event.sender.send('web3-res-channel', resultBody);
+        }, (error) => {
+            logger.error('Unable to process process request: ' + error);
+            let resultError = error;
+            if (error.message) {
+                resultError = error.message;
+                if (error.stack) {
+                    logger.silly(error.stack);
+                }
             }
-        }
-        let resultBody = {id: arg.id, result: null, error: resultError};
-        event.sender.send('web3-res-channel', resultBody);
+            let resultBody = {id: arg.id, result: null, error: resultError};
+            event.sender.send('web3-res-channel', resultBody);
+        });
     });
-});
+
+    createWeb3Observers();
+
+    //Watches the last block and send to push-channel
+    function createWeb3Observers() {
+        let web3 = web3service.getWeb3();
+        if (!web3) {
+            logger.error("Failed to create observers for block, web3 is null, will try again 3 sec")
+            setTimeout(function () {
+                createWeb3Observers();
+            }, 3000);
+            return;
+        }
+
+        web3.eth.filter('latest', function (err, blockHash) {
+            if (err) {
+                logger.error("Could not process block with hash " + blockHash, " Error:" + err);
+            } else {
+                web3.eth.getBlock(blockHash, true, function (err, block) {
+                    if (err) {
+                        logger.error("Could not find block with hash " + blockHash + " Error:" + err)
+                    } else {
+                        console.log(block);
+                        getAccounts().then((accounts) => {
+                            console.log(accounts);
+                            //If we mined block
+                            if (accounts.some(account => block.miner === account)) {
+                                console.log('You have found block! Yay');
+                                pushNotification("YAY! Successfully mined block with hash " + block.hash);
+                            }
+
+                        }, err => {
+                            console.log(err);
+                        })
+                    }
+                })
+            }
+        })
+    }
+
+
+}
+
+function pushNotification(message) {
+    logger.silly('Message to push-notification:' + JSON.stringify(message));
+    if (sender) {
+        sender.send('push-notification', message);
+    } else {
+        logger.warn("Sender id is not defined now");
+    }
+}
 
 function isSyncing() {
     return new Promise((resolve, reject) => {
@@ -504,5 +559,6 @@ function requestDecoder(data) {
 }
 
 module.exports = {
-    getAccounts: getAccounts
+    pushNotification: pushNotification,
+    init: init
 };

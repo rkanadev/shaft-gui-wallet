@@ -6,6 +6,8 @@ const logger = require('../util/logger').getLogger('Web3Service');
 
 let web3 = null;
 
+
+
 function init(path) {
     try {
         logger.info("Connecting to Web3 IPC on path " + path);

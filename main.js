@@ -9,7 +9,6 @@ const url = require('url');
 const path = require('path');
 
 const app = require('./app/app');
-const ipcApi = require('./app/ipc/ipc_api');
 const isDev = require('electron-is-dev');
 const window = require('./app/util/window');
 // Keep a global reference of the window object, if you don't, the window will
@@ -18,12 +17,10 @@ let mainWindow;
 
 function createWindow() {
 
-
     app.init().then(() => {
         logger.info("Shaft GUI Wallet initialized");
         // Create the browser window.
         mainWindow = new BrowserWindow({width: 1200, height: 900, frame: false, center: true});
-
         // and load the index.html of the app.
         if (isDev) {
             mainWindow.loadURL("http://127.0.0.1:4200");
@@ -35,7 +32,6 @@ function createWindow() {
                 slashes: true
             }));
         }
-
         // Emitted when the window is closed.
         mainWindow.on('closed', function () {
             logger.info('Closing wallet');

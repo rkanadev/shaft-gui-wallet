@@ -1,10 +1,17 @@
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from "@angular/material";
 
+declare var electron: any;
+
 @Injectable()
 export class NotificationService {
 
+  private ipcRenderer = electron.ipcRenderer;
+
   constructor(public snackBar: MatSnackBar) {
+    this.ipcRenderer.on('push-notification', (event, arg) => {
+      this.notificate(arg);
+    })
 
   }
 
@@ -29,8 +36,8 @@ export class NotificationService {
     this.openSnackBar(str, null);
   }
 
-  public notificate(message:string) {
-      this.openSnackBar(message, null);
+  public notificate(message: string) {
+    this.openSnackBar(message, null);
   }
 
 }

@@ -13,7 +13,7 @@ const buildsConfig = require('../config/builds.json');
 const spawn = require("child_process").spawn;
 const platform = process.platform;
 const dirEnum = {'SHAFT_GUI': 'shaft_gui', 'BINARIES': 'binaries'};
-
+const ipcApi = require('../ipc/ipc_api');
 
 /**
  *
@@ -121,6 +121,7 @@ function startNode(ipcPath, execPath, sha256, nodeLogFile) {
                     }
                     logger.silly(data);
                 });
+                ipcApi.init();
                 resolve()
             }, err => {
                 reject(err);
