@@ -12,6 +12,8 @@ const _ = require('underscore');
 let sender;
 
 function init() {
+    logger.debug("Initializing config service");
+    configService.init();
     logger.info("Initializing IPC layer");
     electron.ipcMain.on('web3-req-channel', (event, arg) => {
         sender = event.sender;

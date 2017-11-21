@@ -8,7 +8,7 @@ const jsonfile = require('jsonfile');
 const logger = require('../util/logger').getLogger("ConfigService");
 const mkdirp = require('mkdirp');
 const configPath = pathsService.getConfigPath();
-let config;
+let _config;
 
 function init() {
     let exists = fs.existsSync(configPath);
@@ -26,11 +26,8 @@ function init() {
 
 
 function readConfig() {
-    if(!config){
-        logger.error("Config is not initialized yet! Returning empty config ({})")
-        return {}
-    }
-    config = jsonfile.readFileSync(configPath)
+    _config = jsonfile.readFileSync(configPath)
+    logger.silly("App config: " + JSON.stringify(_config));
 }
 
 
@@ -44,17 +41,16 @@ function createConfig() {
 }
 
 function getConfig() {
-    if(!config){
+    if(!_config){
         logger.error("Config is not initialized yet! Returning empty config ({})")
         return {}
     }
-    return config;
+    return _config;
 }
 
 function writeConfig(config) {
     mkdirp.sync(pathsService.getShaftGuiDir());
     return new Promise((resolve, reject) => {
-        mkdirp.
         jsonfile.writeFile(configPath, config, function (err) {
             if (err) {
                 reject(err)
@@ -66,10 +62,10 @@ function writeConfig(config) {
 }
 
 function saveAddressLabel(address, label) {
+    console.log(_config);
     return new Promise((resolve, reject) => {
-        if(!config){
-            reject("Config is not initialized yet! Returning empty config ({})");
-            return {}
+        if(!_config){
+            reject("Config is not initialized yet!");
         }
         let config = getConfig();
         config.labels = config.labels || {};
