@@ -13,7 +13,7 @@
   "publish": [
     {
       "provider": "generic",
-      "url": "https://repo.ci.shaft.sh/repo/shaft-gui-wallet/windows"
+      "url": "https://ci.shaft.sh/repo/shaft-gui-wallet/windows"
     }
   ]
 }
