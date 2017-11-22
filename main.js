@@ -11,7 +11,7 @@ const path = require('path');
 const app = require('./app/app');
 const isDev = require('electron-is-dev');
 const window = require('./app/util/window');
-const autoUpdater = require("electron-updater").autoUpdater
+const updaterService = require('./app/service/updater-service');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -45,8 +45,7 @@ function createWindow() {
         });
         window.injectWindow(mainWindow);
 
-        autoUpdater.checkForUpdatesAndNotify()
-
+        updaterService.init();
     }, err => {
         logger.error(err);
         process.exit(0)
