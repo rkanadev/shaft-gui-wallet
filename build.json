@@ -9,5 +9,11 @@
         ]
       }
     ]
-  }
+  },
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "https://repo.ci.shaft.sh/repo/shaft-gui-wallet/windows"
+    }
+  ]
 }
