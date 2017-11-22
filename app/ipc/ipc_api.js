@@ -67,7 +67,7 @@ function init() {
 
                                 block.transactions.forEach((tx) => {
                                     if(tx.to === account) {
-                                        pushNotification("Incoming transaction " + tx.value/1000000000000000000 + " to address " + account);
+                                        pushNotification("Incoming transaction " + tx.value/1000000000000000000 + " SHF to address " + account);
                                     }
                                 })
                             });
