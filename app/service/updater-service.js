@@ -30,7 +30,13 @@ function init() {
         console.log(info);
     });
 
-    autoUpdater.checkForUpdates();
+    autoUpdater.checkForUpdates().then((updateCheckResult)=>  {
+        logger.info("Check for updates resolved");
+        console.log(updateCheckResult)
+    },err => {
+        logger.error("Error checking for updates: " + err);
+        console.log(err);
+    });
 }
 
 
