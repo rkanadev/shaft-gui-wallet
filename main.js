@@ -46,7 +46,6 @@ function createWindow() {
         window.injectWindow(mainWindow);
 
         updaterService.checkForUpdates().then(updateCheckResult => {
-            updaterService.install();
         },err=> {
             logger.error("Could not check for updates: " + err);
         })

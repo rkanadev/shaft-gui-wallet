@@ -27,6 +27,8 @@ function init() {
 
     autoUpdater.on('update-downloaded', (info) => {
         logger.info(`Downloaded new version ${info.version}`)
+        //todo moveout
+        install();
         console.log(info);
     });
 
