@@ -11,6 +11,8 @@ const path = require('path');
 const app = require('./app/app');
 const isDev = require('electron-is-dev');
 const window = require('./app/util/window');
+const autoUpdater = require("electron-updater").autoUpdater
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -32,6 +34,7 @@ function createWindow() {
                 slashes: true
             }));
         }
+
         // Emitted when the window is closed.
         mainWindow.on('closed', function () {
             logger.info('Closing wallet');
@@ -41,6 +44,9 @@ function createWindow() {
             mainWindow = null
         });
         window.injectWindow(mainWindow);
+
+        autoUpdater.checkForUpdatesAndNotify()
+
     }, err => {
         logger.error(err);
         process.exit(0)
