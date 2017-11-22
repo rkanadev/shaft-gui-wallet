@@ -28,6 +28,7 @@ function init() {
     autoUpdater.on('update-downloaded', (info) => {
         logger.info(`Downloaded new version ${info.version}`)
         console.log(info);
+        autoUpdater.quitAndInstall();
     });
 
     autoUpdater.checkForUpdates().then((updateCheckResult)=>  {
