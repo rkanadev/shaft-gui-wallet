@@ -26,6 +26,7 @@ export class AccountComponent implements OnInit {
   private dataSource: TransactionDataSource | null;
   private transactionDatabase: TransactionDatabase;
   private label: string;
+  private error:string;
 
   @ViewChild(MatPaginator)
   set setPaginatorHandler(paginator: MatPaginator) {
@@ -92,7 +93,7 @@ export class AccountComponent implements OnInit {
       this.IPCService.getBalance(this.address).then(balance => {
         this.balance = balance;
       }, error => {
-        console.log(error)
+        this.NotificationService.notificate("Could not get address balance: " + error);
       });
 
       this.IPCService.getTransactionsByAddress(this.address).then((transactions: Transaction[]) => {
@@ -100,7 +101,7 @@ export class AccountComponent implements OnInit {
         this.transactions = transactions;
         this.transactionDatabase.updateData(transactions)
       }, error => {
-        console.log(error)
+        this.NotificationService.notificate("Could not get transactions by account: " + error);
       })
     });
   }

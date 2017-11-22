@@ -22,6 +22,7 @@ export class NotificationService {
     }
     this.snackBar.open(label, action, {
       duration: 5000,
+      extraClasses: ['snackbar-container']
     });
   }
 

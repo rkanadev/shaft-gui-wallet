@@ -143,6 +143,7 @@ function checkHashsumOfFile(path, sha256) {
         s.on('end', function () {
             let d = shasum.digest('hex');
             if (d !== sha256) {
+                //todo fix path in message
                 reject('SHA256 hashsum test failed. Please, remove incorrect binary from ~/.shaft-gui/binaries');
             } else {
                 resolve();

@@ -1,2 +1,2 @@
-1) fix mkdir bug
-2) push blocks & transaction in notificationservice
+1) push blocks & transaction in notificationservice
+2) Fix startup before web3 connected

@@ -19,3 +19,11 @@ body {
   width: 0; /* remove scrollbar space */
   background: transparent; /* optional: just make scrollbar invisible */
 }
+
+.snackbar-container {
+  min-height: 10px;
+  display: inline-block;
+  vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+}
