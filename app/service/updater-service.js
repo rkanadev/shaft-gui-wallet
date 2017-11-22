@@ -7,8 +7,6 @@ function init() {
     autoUpdater.on('checking-for-update', () => {
         logger.info("Checking for update");
     });
-
-
     autoUpdater.on('download-progress', (progress) => {
         let total = progress.total;
         let transferred = progress.total;
@@ -30,7 +28,9 @@ function init() {
     autoUpdater.on('update-downloaded', (info) => {
         logger.info(`Downloaded new version ${info.version}`)
         console.log(info);
-    })
+    });
+
+    autoUpdater.checkForUpdates();
 }
 
 
