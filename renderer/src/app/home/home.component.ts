@@ -93,7 +93,7 @@ export class HomeComponent implements OnInit {
         result += parseFloat(this.UnitConvertWeiToEther.transform(this.accounts[key].balance));
       }
     });
-    return result.toString();
+    return (Math.round(result*100)/100).toString();
   }
 
   getAllTransactions() {
