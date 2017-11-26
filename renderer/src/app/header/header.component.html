@@ -1,17 +1,28 @@
 <div>
   <mat-toolbar class="toolbar-container">
     <div class="header-container">
-      <a (click)="sidenav.open()" mat-button="" class="menu-button">
-        <mat-icon class="menu-icon" color="white">menu</mat-icon>
-      </a>
+      <div class="menu-container">
+        <div class="menu_item">
+          <button mat-button="" class="button" routerLink="home" [routerLinkActive]="'button_active'">Dashboard</button>
+        </div>
+        <div class="menu_item">
+          <button mat-button="" class="button" routerLink="accounts" [routerLinkActive]="'button_active'">Accounts
+          </button>
+        </div>
+        <div class="menu_item">
+          <button mat-button="" class="button" routerLink="send" [routerLinkActive]="'button_active'">Send</button>
+        </div>
+      </div>
       <div class="app-controls">
         <div>
-          <button (click)="minimizeApp()" mat-button="" mat-icon-button="clear" aria-label="Minimize" class="min-button">
+          <button (click)="minimizeApp()" mat-button="" mat-icon-button="clear" aria-label="Minimize"
+                  class="min-button">
             <mat-icon class="menu-icon" color="white">minimize</mat-icon>
           </button>
         </div>
         <div>
-          <button (click)="maximizeApp()" mat-button="" mat-icon-button="clear" aria-label="Maximize" class="max-button">
+          <button (click)="maximizeApp()" mat-button="" mat-icon-button="clear" aria-label="Maximize"
+                  class="max-button">
             <mat-icon class="menu-icon" color="white">fullscreen</mat-icon>
           </button>
         </div>

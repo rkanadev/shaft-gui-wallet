@@ -3,5 +3,5 @@
     "level": "silly"
   },
   "testnet" : true,
-  "rpc" : false
+  "rpc" : true
 }

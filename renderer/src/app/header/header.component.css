@@ -53,6 +53,11 @@
   align-items: center;
 }
 
+.button {
+  -webkit-app-region: no-drag;
+  cursor: pointer;
+}
+
 .menu-icon {
 
 }
@@ -66,7 +71,7 @@
   width: 100%;
   padding-left: 20px;
   padding-right: 20px;
-  color:white;
+  color: white;
 }
 
 .app-controls {
@@ -75,4 +80,24 @@
   align-items: flex-end;
   flex-direction: row;
   flex-wrap: wrap;
+}
+
+.button_active {
+  background-color: white;
+  border-radius: 0;
+  color: #651FFF;
+}
+
+.button {
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+
+.menu_item {
+  padding: 10px;
 }
