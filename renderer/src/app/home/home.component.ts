@@ -93,7 +93,7 @@ export class HomeComponent implements OnInit {
         result += parseFloat(this.UnitConvertWeiToEther.transform(this.accounts[key].balance));
       }
     });
-    return (Math.round(result*100)/100).toString();
+    return (Math.round(result*10000)/10000).toString();
   }
 
   getAllTransactions() {
@@ -102,7 +102,7 @@ export class HomeComponent implements OnInit {
     Object.keys(this.accounts).forEach(function (account) {
       let transactions = self.accounts[account].transactions;
       if (transactions) {
-        console.log('Account', account, JSON.stringify(transactions));
+        //console.log('Account', account, JSON.stringify(transactions));
         transactions.forEach((tx) => {
           result.push(tx)
         });

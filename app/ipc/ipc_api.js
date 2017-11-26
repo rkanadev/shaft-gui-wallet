@@ -9,6 +9,7 @@ const fetch = require('node-fetch');
 const app = require('electron').app;
 const window = require('../util/window');
 const _ = require('underscore');
+const version = require('./../../package.json').version;
 let sender;
 
 function init() {
@@ -300,6 +301,7 @@ function sendTransaction(transactionData) {
         }
 
         //todo validate
+        transactionData.extraData = "Sent from Shaft-GUI v alpha-" + version;
         web3.eth.sendTransaction(transactionData, function (err, receipt) {
             if (err) {
                 reject(err);
@@ -339,7 +341,7 @@ function saveAddressLabel(address, label) {
     });
 }
 
-function getAddressLabel(address,) {
+function getAddressLabel(address) {
     return new Promise((resolve, reject) => {
         configService.getAddressLabel(address).then((label) => resolve(label), (err) => {
             reject(err)

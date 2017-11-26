@@ -1,11 +1,19 @@
 .home {
-  width: 100%;
+  /*  height: 100%;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    display: flex;
+    padding-top: 20px;
+    padding-bottom: 0px;
+    text-align: left;
+    justify-content: space-between;*/
+
   height: 100%;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding: 10px;
+  text-align: center;
   display: flex;
-  padding-top: 20px;
-  padding-bottom: 0px;
-  text-align: left;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  font-family: Roboto, "Helvetica Neue", sans-serif;;
 }
 
 .accounts {
@@ -13,8 +21,9 @@
 }
 
 .transactions {
+  opacity: 0.9;
+  width: auto;
   display: flex;
-  width: 50%;
   justify-content: center;
   flex-direction: column;
   flex-wrap: wrap;
@@ -23,13 +32,16 @@
 }
 
 .info {
-  width: 50%;
-  height: 100%;
+  opacity: 0.9;
   padding: 10px;
+  left: 0;
+  height: 80vh;
   text-align: center;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .info_item {
@@ -38,7 +50,7 @@
   border-radius: 0;
   padding: 10px;
   margin: 30px;
-  margin-top:10px;
+  margin-top: 10px;
   display: flex;
   min-width: 100px;
   min-height: 100px;
@@ -66,13 +78,72 @@
 }
 
 .heading {
-  font-size: 15pt;
-  font-weight: 100
+  font-size: 16pt;
+  font-weight: 600;
+  opacity: 0.9;
 }
 
 .mined {
 }
 
 .balance {
-  text-align: center;
+  font-weight: 600;
+}
+
+.balance_line {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-items: center;
+}
+
+.balance_line_item {
+  padding: 5px;
+  font-size: 30pt;
+}
+
+.shf_icon {
+
+}
+
+.shf_ticker {
+
+}
+
+.line {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  padding-top:5px;
+  padding-down:5px;
+}
+
+.sub-info {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.line_text {
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 25pt;
+  font-weight: 600
+
+}
+
+.line_value {
+  font-weight: lighter;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 25pt;
+}
+
+.arrow {
+  padding-right: 8px;
+  display: flex;
+  align-items: flex-end;
 }

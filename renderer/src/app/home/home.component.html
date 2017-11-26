@@ -1,38 +1,47 @@
 <div class="home">
 
   <div class="info">
-    <div>
-      <span class="sub-heading">Total balance</span>
-      <div class="balance info_item">
+    <div class="balance_line">
+      <div class="balance balance_line_item">1 231.2233</div>
+      <div class="shf_icon balance_line_item">
+        <shaft-icon></shaft-icon>
+      </div>
+      <div class="shf_ticker balance_line_item">SHF</div>
+    </div>
+    <div class="sub-info">
+      <div class="line">
+        <arrow-icon class="arrow" [direction]="'down'"></arrow-icon>
+        <span class="line_text">Mined:</span>
+        <span class="line_value">375</span>
+        <span class="line_value">BLOCKS</span>
+      </div>
+      <div class="line">
+        <arrow-icon class="arrow" [direction]="'right'"></arrow-icon>
+        <span class="line_text">Received</span>
+        <span class="line_value">38234</span>
+        <span class="line_value">SHF</span>
+      </div>
+      <div class="line">
+        <arrow-icon class="arrow" [direction]="'left'"></arrow-icon>
+        <span class="line_text">Sent:</span>
+        <span class="line_value">375</span>
+        <span class="line_value">SHF</span>
+      </div>
+    </div>
+    <!--
         <div *ngIf="getAccountsAsArray().length == 0" class="heading">0 SHF</div>
         <div *ngIf="getAccountsAsArray().length > 0">
           <div class="heading">{{getTotalBalance()}} SHF</div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <span class="sub-heading">Total blocks mined</span>
-      <div class="mined info_item">
-        <span class="heading">{{minedBlocks.length}} BLOCKS</span>
-      </div>
-    </div>
-    <div>
-      <span class="sub-heading">Difficulty</span>
-      <div class="difficulty info_item">
-        <span class="heading">{{getDiffHumanReadable()}}G</span>
-      </div>
-    </div>
+        </div>-->
   </div>
 
   <div class="transactions">
-    <span>Transactions</span>
     <div class="tx-scroll-container">
       <div *ngFor="let tx of getAllTransactions()">
         <div class="tx-card" (click)="openTransactionDetailsDialog(tx.hash)">
-          <mat-card>
+          <mat-card style="padding:25px">
             <mat-card-header>
-              <span style="font-size: 80%;font-weight: 400">{{tx.hash}}</span>
+              <span style="margin-left:-8px;text-align:left;font-size: 10pt;font-weight: 800">{{tx.hash}}</span>
             </mat-card-header>
             <mat-card-content>
               <div

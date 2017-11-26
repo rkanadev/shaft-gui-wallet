@@ -24,6 +24,8 @@ import {AccountsComponent, CreateAccountDialog} from './accounts/accounts.compon
 import {CoreModule} from "./core.module";
 import {AccountComponent} from "./account/account.component";
 import {UnitConvertWeiToEther} from "./util/pipes/unit-converter-pipe";
+import {ShaftIconComponent} from "./directives/shaft-icon/shaft-icon";
+import {ArrowIconComponent} from "./directives/arrow-icon/arrow-icon";
 
 const appRoutes: Routes = [
   {path: 'send', component: SendComponent},
@@ -32,7 +34,6 @@ const appRoutes: Routes = [
   {path: 'account/:addressHash', component: AccountComponent},
   {path: '**', redirectTo: '/home'}
 ];
-
 
 @NgModule({
   declarations: [
@@ -47,6 +48,8 @@ const appRoutes: Routes = [
     SendDialog,
     CreateAccountDialog,
     TransactionDetailsDialog,
+    ShaftIconComponent,
+    ArrowIconComponent,
     UnitConvertWeiToEther],
   entryComponents: [CreateAccountDialog, SendDialog, TransactionDetailsDialog],
   imports: [
