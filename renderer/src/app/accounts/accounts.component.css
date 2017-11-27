@@ -19,10 +19,21 @@
   padding-bottom: 25px;
   padding-left: 25px;
   margin-bottom: 25px;
-  width: 200px;
-}  .account_card {
+}
+
+.account_card {
   text-decoration: none;
   color: black;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  height: 200px;
+  width: 160px;
+}
+
+.create_account_button {
 }
 
 .account_card:hover {
@@ -35,7 +46,15 @@
   text-align: center;
 }
 
-
 .label {
   word-wrap: break-word;
+}
+
+.card_icon {
+  opacity: 0.3;
+}
+.create_account_button {
+  margin-top:10px;
+  background-color: #651FFF;
+  color:white;
 }

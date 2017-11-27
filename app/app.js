@@ -9,7 +9,6 @@ const version = require('../package.json').version;
 function init() {
     return new Promise((resolve, reject) => {
         //Computing paths;
-
         //Checking and creating folders
         gethNodeService.checkOrCreateFolders().then(() => {
                 logger.debug('All folders seems to be exist or created, we may starting app.');
@@ -17,11 +16,9 @@ function init() {
                 logger.debug('Starting file logger in path ' + logPath);
                 loggerFactory.initFileLogger(logPath);
                 logger.info('SHAFT GUI Wallet started v' + version);
-
                 logger.debug("Checking for local binaries");
-                gethNodeService.init().then(success => {
-                    logger.debug('Successful start:' + success);
-
+                gethNodeService.init().then(proc => {
+                    logger.debug('Successful start:' + proc);
                     resolve()
                 }, err => {
                     logger.error('BAD ' + err);

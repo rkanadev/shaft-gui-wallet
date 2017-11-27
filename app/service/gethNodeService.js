@@ -14,6 +14,7 @@ const spawn = require("child_process").spawn;
 const platform = process.platform;
 const dirEnum = {'SHAFT_GUI': 'shaft_gui', 'BINARIES': 'binaries'};
 const ipcApi = require('../ipc/ipc_api');
+const procHolder = require('../util/procHolder');
 
 /**
  *
@@ -72,8 +73,10 @@ function startNode(ipcPath, execPath, sha256, nodeLogFile) {
         let isIPCFileExists = fs.existsSync(ipcPath);
         logger.silly('Checking IPC file in' + ipcPath);
         if (isIPCFileExists) {
+            logger.info("Connecting using existing file in " + ipcPath);
             web3Service.init(ipcPath);
-            resolve();
+            ipcApi.init(null);
+            resolve(null);
         } else {
             logger.info('IPC file not found, starting node');
             let proc = null;
@@ -115,14 +118,15 @@ function startNode(ipcPath, execPath, sha256, nodeLogFile) {
                 proc.stderr.on('data', (data) => {
                     if (data.indexOf("IPC endpoint opened") !== -1) {
                         //setTimeout(function () {
-                            logger.debug("Connecting web3 to gethNode");
-                            web3Service.init(ipcPath);
+                        logger.debug("Connecting web3 to gethNode");
+                        web3Service.init(ipcPath);
                         //}, 3000);
                     }
                     logger.silly(data);
                 });
-                ipcApi.init();
-                resolve()
+                ipcApi.init(proc);
+                procHolder.putProc(proc)
+                resolve(proc)
             }, err => {
                 reject(err);
             })
@@ -152,7 +156,7 @@ function checkHashsumOfFile(path, sha256) {
     })
 }
 
-function onNodeStarted(resolve) {
+function onNodeStarted(resolve, proc) {
     logger.info("Started embedded geth node");
     resolve();
 }
@@ -164,7 +168,7 @@ function onNodeStartError(err, reject) {
 
 function getIpcPath(testnet) {
     let ipcPath = pathsService.getShaftDir();
-    if(isPlatformWindows()) {
+    if (isPlatformWindows()) {
         //todo move logic to pathService
         ipcPath = '\\\\.\\pipe\\';
         ipcPath += '\\geth.ipc';
@@ -173,7 +177,7 @@ function getIpcPath(testnet) {
     }
     if (testnet) {
         if (isPlatformLinux()) {
-            ipcPath +=  '/testnet' + '/geth.ipc';
+            ipcPath += '/testnet' + '/geth.ipc';
         }
         return ipcPath;
     } else {
@@ -198,7 +202,7 @@ function init() {
         if (isBinaryExist) {
             //TODO remove code duplication
             let ipcPath = getIpcPath(appConfig.testnet);
-            startNode(ipcPath, execPath, sha256, nodeLogFile).then(() => onNodeStarted(resolve), err => onNodeStartError(err, reject))
+            startNode(ipcPath, execPath, sha256, nodeLogFile).then((proc) => onNodeStarted(resolve, proc), err => onNodeStartError(err, reject))
         } else {
             downloadBinary(buildUrl, execPath).then(() => {
                     if (isPlatformLinux()) {
@@ -207,7 +211,7 @@ function init() {
                     logger.info("Successfully downloaded build from" + buildUrl + " and placed it into "
                         + execPath);
                     let ipcPath = getIpcPath(appConfig.testnet);
-                    startNode(ipcPath, execPath, sha256, nodeLogFile).then(() => onNodeStarted(resolve), err => onNodeStartError(err, reject));
+                    startNode(ipcPath, execPath, sha256, nodeLogFile).then((proc) => onNodeStarted(resolve, proc), err => onNodeStartError(err, reject));
                 }, (error) => {
                     reject(error);
                 }

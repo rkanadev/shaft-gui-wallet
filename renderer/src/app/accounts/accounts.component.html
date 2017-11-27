@@ -5,15 +5,24 @@
       <li *ngFor="let account of getAccountsAsArray();let i = index">
         <div>
           <mat-card class="account_card" [routerLink]="['/account', account]">
-            <div *ngIf="accounts[account].iconBase64Url" class="account-icon">
-              <img src="{{accounts[account].iconBase64Url}}"/>
-            </div>
-            <hr/>
-            <mat-card-title><span class="label">{{this.accounts[account].label}}</span></mat-card-title>
-            <mat-card-subtitle>{{getBalance(account)}} SHF</mat-card-subtitle>
-            <span>{{account.substr(0,16)}}...</span>
+            <mat-card-content>
+              <div class="flex-column" style="justify-content: center;align-items: center">
+                <div class="card_icon">
+                  <shaft-icon></shaft-icon>
+                </div>
+                <span style="text-align: center;padding:20px;opacity:0.9;font-size:20px;word-break: normal">{{this.accounts[account].label || 'Label ' + i}}</span>
+              </div>
+            </mat-card-content>
           </mat-card>
         </div>
+      </li>
+      <li>
+        <mat-card class="account_card" [routerLink]="['/account', account]">
+          <div class="card_icon">
+            <shaft-icon></shaft-icon>
+          </div>
+          <button class="create_account_button" mat-button="">Create account</button>
+        </mat-card>
       </li>
     </ul>
   </div>

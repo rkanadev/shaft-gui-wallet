@@ -27,3 +27,9 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.flex-column {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}

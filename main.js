@@ -44,11 +44,12 @@ function createWindow() {
             mainWindow = null
         });
         window.injectWindow(mainWindow);
-
-        updaterService.checkForUpdates().then(updateCheckResult => {
-        },err=> {
-            logger.error("Could not check for updates: " + err);
-        })
+        if (!isDev) {
+            updaterService.checkForUpdates().then(updateCheckResult => {
+            }, err => {
+                logger.error("Could not check for updates: " + err);
+            })
+        }
     }, err => {
         logger.error(err);
         process.exit(0)

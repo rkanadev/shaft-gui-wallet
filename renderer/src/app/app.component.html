@@ -6,7 +6,10 @@
     </mat-sidenav>
 
     <div class="sidenav-content">
-      <div style="width:100%;height:100%">
+      <div class="loading-spinner flex-column" *ngIf="!initialized">
+        <mat-spinner></mat-spinner>
+      </div>
+      <div style="width:100%;height:100%" *ngIf="initialized">
         <router-outlet style="width:100%;height:100%"></router-outlet>
       </div>
     </div>

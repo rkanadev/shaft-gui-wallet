@@ -1,7 +1,7 @@
 {
   "log": {
-    "level": "silly"
+    "level": "debug"
   },
   "testnet" : true,
-  "rpc" : true
+  "rpc" : false
 }

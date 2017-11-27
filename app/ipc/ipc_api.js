@@ -8,11 +8,12 @@ const BigNumber = require('bignumber.js');
 const fetch = require('node-fetch');
 const app = require('electron').app;
 const window = require('../util/window');
+const procHolder = require('../util/procHolder');
 const _ = require('underscore');
 const version = require('./../../package.json').version;
 let sender;
 
-function init() {
+function init(proc) {
     logger.debug("Initializing config service");
     configService.init();
     logger.info("Initializing IPC layer");
@@ -62,13 +63,13 @@ function init() {
                         getAccounts().then((accounts) => {
                             accounts.forEach(account => {
                                 //If we mined block
-                                if(block.miner === account) {
-                                   pushNotification("YAY! Successfully mined block with hash " + block.hash);
+                                if (block.miner === account) {
+                                    pushNotification("YAY! Successfully mined block with hash " + block.hash);
                                 }
 
                                 block.transactions.forEach((tx) => {
-                                    if(tx.to === account) {
-                                        pushNotification("Incoming transaction " + tx.value/1000000000000000000 + " SHF to address " + account);
+                                    if (tx.to === account) {
+                                        pushNotification("Incoming transaction " + tx.value / 1000000000000000000 + " SHF to address " + account);
                                     }
                                 })
                             });
@@ -349,12 +350,20 @@ function getAddressLabel(address) {
     })
 }
 
-function exitApp() {
+function exitApp(proc) {
+    //sorry for exiting outside promise :(
+    if(proc !== null) {
+        logger.info("Killing geth process");
+        //unloading ipc api
+        web3service.haltWeb3();
+        ipcMain.removeAllListeners('web3-req-channel');
+        proc.kill('SIGINT');
+    }
     return new Promise((resolve, reject) => {
         //todo promisify exit
         setTimeout(function () {
             app.exit();
-        }, 3000);
+        }, 1000);
         resolve()
     })
 }
@@ -418,6 +427,19 @@ function getMinedBlocks() {
             }
         )
     });
+}
+
+function isInitialized() {
+    return new Promise((resolve) => {
+        let web3 = web3service.getWeb3();
+
+        if (!web3) {
+            resolve(false);
+        } else {
+            resolve(true);
+        }
+    });
+
 }
 
 
@@ -534,7 +556,8 @@ function requestDecoder(data) {
                 }, rej => reject(rej));
                 break;
             case 'app_exit':
-                exitApp().then((result) => {
+                let proc = procHolder.getProc();
+                exitApp(proc).then((result) => {
                     resolve(result);
                 }, err => reject(err));
                 break;
@@ -555,6 +578,11 @@ function requestDecoder(data) {
                 break;
             case 'get_mined_blocks':
                 getMinedBlocks().then((result) => {
+                    resolve(result);
+                }, err => reject(err));
+                break;
+            case 'is_initialized':
+                isInitialized().then((result) => {
                     resolve(result);
                 }, err => reject(err));
                 break;
