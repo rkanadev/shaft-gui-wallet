@@ -17,11 +17,11 @@
         </div>
       </li>
       <li>
-        <mat-card class="account_card" [routerLink]="['/account', account]">
+        <mat-card class="account_card">
           <div class="card_icon">
             <shaft-icon></shaft-icon>
           </div>
-          <button class="create_account_button" mat-button="">Create account</button>
+          <button class="create_account_button" mat-button="" (click)="openCreateAccountDialog()">Create account</button>
         </mat-card>
       </li>
     </ul>

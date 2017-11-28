@@ -157,7 +157,11 @@ function checkHashsumOfFile(path, sha256) {
 }
 
 function onNodeStarted(resolve, proc) {
-    logger.info("Started embedded geth node");
+    if(proc) {
+        logger.info("Started embedded geth node");
+    }else {
+        logger.info("Connecting to node on existing IPC connection");
+    }
     resolve();
 }
 

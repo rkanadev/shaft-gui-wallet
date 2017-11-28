@@ -2,7 +2,7 @@
 
   <div class="info">
     <div class="balance_line">
-      <div class="balance balance_line_item">1 231.2233</div>
+      <div class="balance balance_line_item">{{getTotalBalance()}}</div>
       <div class="shf_icon balance_line_item">
         <shaft-icon></shaft-icon>
       </div>
@@ -12,19 +12,19 @@
       <div class="line">
         <arrow-icon class="arrow" [direction]="'down'"></arrow-icon>
         <span class="line_text">Mined:</span>
-        <span class="line_value">375</span>
+        <span class="line_value">{{getMinedBlocks()}}</span>
         <span class="line_value">BLOCKS</span>
       </div>
       <div class="line">
         <arrow-icon class="arrow" [direction]="'right'"></arrow-icon>
-        <span class="line_text">Received</span>
-        <span class="line_value">38234</span>
+        <span class="line_text">Received:</span>
+        <span class="line_value">{{getReceived()}}</span>
         <span class="line_value">SHF</span>
       </div>
       <div class="line">
         <arrow-icon class="arrow" [direction]="'left'"></arrow-icon>
         <span class="line_text">Sent:</span>
-        <span class="line_value">375</span>
+        <span class="line_value">{{getSent()}}</span>
         <span class="line_value">SHF</span>
       </div>
     </div>
@@ -35,7 +35,7 @@
         </div>-->
   </div>
 
-  <div class="transactions">
+  <div class="transactions" *ngIf="getAllTransactions().length>0">
     <div class="tx-scroll-container">
       <div *ngFor="let tx of getAllTransactions()">
         <div class="tx-card" (click)="openTransactionDetailsDialog(tx.hash)">
