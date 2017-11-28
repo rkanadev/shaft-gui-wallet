@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
       this.NotificationService.notificate("Could not get difficulty");
       this.difficulty = null
     });
-
+    let self = this;
 
     this.IPCService.getAccounts().then(accounts => {
       accounts.forEach((account) => {
@@ -50,6 +50,7 @@ export class HomeComponent implements OnInit {
         this.IPCService.getBalance(account).then((balance) => {
           this.accounts[account].balance = balance;
         }, function (error) {
+          self.NotificationService.notificate("Could not get balance" + error)
           console.log(error);
         });
         this.IPCService.getTransactionsByAddress(account).then((result) => {
@@ -64,6 +65,72 @@ export class HomeComponent implements OnInit {
       console.log(error);
       this.accounts = []
     });
+  }
+
+  public getMinedBlocks() {
+    return this.minedBlocks.length;
+  }
+
+  public getReceived() {
+    // {hashTx : received, ...}
+
+    let recv = {
+      "0xasdasd": 132
+    };
+
+    Object.keys(this.accounts).forEach((account) => {
+      if (this.accounts[account].transactions) {
+        let txs = this.accounts[account].transactions;
+        txs.forEach((tx) => {
+          if (
+            Object.keys(this.accounts).some((acc) => {
+              console.log('Added for received:' + tx.value / 1000000000000000000);
+              let bool = acc === tx.to;
+
+              if (!recv[tx.hash] && bool) {
+                recv[tx.hash] = tx.value / 1000000000000000000;
+              }
+              return bool;
+            })) {
+          }
+
+        })
+      }
+    });
+
+    let result = 0;
+    Object.keys(recv).forEach((tx) => {
+      result += recv[tx];
+    });
+
+    return result;
+  }
+
+  public getSent() {
+    // {txHash : sent, ...}
+    let sent = {};
+    Object.keys(this.accounts).forEach((account) => {
+      if (this.accounts[account].transactions) {
+        let txs = this.accounts[account].transactions;
+        txs.forEach((tx) => {
+          if (
+            Object.keys(this.accounts).some((acc) => {
+              let bool = acc === tx.from;
+              if (!sent[tx.hash] && bool) {
+                sent[tx.hash] = tx.value / 1000000000000000000;
+              }
+              return bool;
+            })) {
+          }
+
+        })
+      }
+    });
+    let result = 0;
+    Object.keys(sent).forEach((tx) => {
+      result += sent[tx];
+    });
+    return Math.round(result * 100) / 100
   }
 
   public getDiffHumanReadable() {
@@ -93,7 +160,7 @@ export class HomeComponent implements OnInit {
         result += parseFloat(this.UnitConvertWeiToEther.transform(this.accounts[key].balance));
       }
     });
-    return (Math.round(result*10000)/10000).toString();
+    return (Math.round(result * 10000) / 10000).toString();
   }
 
   getAllTransactions() {
@@ -102,7 +169,6 @@ export class HomeComponent implements OnInit {
     Object.keys(this.accounts).forEach(function (account) {
       let transactions = self.accounts[account].transactions;
       if (transactions) {
-        //console.log('Account', account, JSON.stringify(transactions));
         transactions.forEach((tx) => {
           result.push(tx)
         });

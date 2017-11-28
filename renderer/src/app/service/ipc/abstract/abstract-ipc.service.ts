@@ -27,7 +27,7 @@ export class AbstractIPCService {
     //response channel
     let self = this;
     this.on('web3-res-channel', function (event, arg) {
-      console.log('Got response', JSON.stringify(arg));
+      //console.log('Got response', JSON.stringify(arg));
       let id = arg.id;
       if (!self.cache[id]) {
         //todo Notification

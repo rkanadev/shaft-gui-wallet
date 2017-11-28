@@ -12,19 +12,19 @@
       <div class="line">
         <arrow-icon class="arrow" [direction]="'down'"></arrow-icon>
         <span class="line_text">Mined:</span>
-        <span class="line_value">375</span>
+        <span class="line_value">{{getMinedBlocks()}}</span>
         <span class="line_value">BLOCKS</span>
       </div>
       <div class="line">
         <arrow-icon class="arrow" [direction]="'right'"></arrow-icon>
-        <span class="line_text">Received</span>
-        <span class="line_value">38234</span>
+        <span class="line_text">Received:</span>
+        <span class="line_value">{{getReceived()}}</span>
         <span class="line_value">SHF</span>
       </div>
       <div class="line">
         <arrow-icon class="arrow" [direction]="'left'"></arrow-icon>
         <span class="line_text">Sent:</span>
-        <span class="line_value">375</span>
+        <span class="line_value">{{getSent()}}</span>
         <span class="line_value">SHF</span>
       </div>
     </div>
