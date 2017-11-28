@@ -8,13 +8,14 @@ import {NotificationService} from "../service/notification/notification.service"
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import {CreateAccountDialog} from "../accounts/accounts.component";
 import BigNumber from "bignumber.js";
+import {DecimalPipe} from "@angular/common";
 
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [UnitConvertWeiToEther, NotificationService]
+  providers: [UnitConvertWeiToEther, NotificationService, DecimalPipe]
 })
 
 export class HomeComponent implements OnInit {
@@ -24,7 +25,11 @@ export class HomeComponent implements OnInit {
   public minedBlocks: {}[];
   public difficulty: number;
 
-  constructor(private IPCService: IPCService, private UnitConvertWeiToEther: UnitConvertWeiToEther, private NotificationService: NotificationService, public dialog: MatDialog) {
+  constructor(private IPCService: IPCService,
+              private UnitConvertWeiToEther: UnitConvertWeiToEther,
+              private NotificationService: NotificationService,
+              public dialog: MatDialog,
+              private DecimalPipe: DecimalPipe) {
     console.log('Home loaded');
     this.accounts = {};
     this.transactions = [];
@@ -74,9 +79,7 @@ export class HomeComponent implements OnInit {
   public getReceived() {
     // {hashTx : received, ...}
 
-    let recv = {
-      "0xasdasd": 132
-    };
+    let recv = {};
 
     Object.keys(this.accounts).forEach((account) => {
       if (this.accounts[account].transactions) {
@@ -160,7 +163,10 @@ export class HomeComponent implements OnInit {
         result += parseFloat(this.UnitConvertWeiToEther.transform(this.accounts[key].balance));
       }
     });
-    return (Math.round(result * 10000) / 10000).toString();
+    let resultStr = this.DecimalPipe.transform((Math.round(result * 10000) / 10000), '1.0-4')
+    //kek, dirty hack
+    resultStr = resultStr.replace(',', ' ');
+    return resultStr;
   }
 
   getAllTransactions() {

@@ -13,3 +13,4 @@
 ### v0.0.4 
 1. Fix for broken templating in dashboard
 2. Fix for create acccount button
+3. Decreased time for qutting app
