@@ -1,7 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {IntervalObservable} from "rxjs/observable/IntervalObservable";
-import {Subscribable} from "rxjs/Observable";
 import {Subscription} from "rxjs/Subscription";
 import {IPCService} from "../service/ipc/concrete/ipc.service";
 

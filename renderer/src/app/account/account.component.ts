@@ -1,14 +1,15 @@
-import {Component, Inject, OnInit, ViewChild, ViewChildren} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
-import {MatPaginator, MatSnackBar} from "@angular/material";
+import {MatPaginator} from "@angular/material";
 import {DataSource} from "@angular/cdk/collections";
 import {Transaction} from "../model/Transaction";
 import {UnitConvertWeiToEther} from "../util/pipes/unit-converter-pipe";
 import {AccountIconService} from "../service/account-icon/account-icon.service";
 import {NotificationService} from "../service/notification/notification.service";
 import {IPCService} from "../service/ipc/concrete/ipc.service";
+import {PaginatorConfig} from "../model/PaginatorConfig";
 
 @Component({
   selector: 'app-account',
@@ -26,7 +27,8 @@ export class AccountComponent implements OnInit {
   private dataSource: TransactionDataSource | null;
   private transactionDatabase: TransactionDatabase;
   private label: string;
-  private error:string;
+  private error: string;
+  private paginatorConfig: PaginatorConfig
 
   @ViewChild(MatPaginator)
   set setPaginatorHandler(paginator: MatPaginator) {
@@ -36,11 +38,20 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  constructor(private route: ActivatedRoute, private IPCService: IPCService, private AccountIconService: AccountIconService, private NotificationService: NotificationService) {
+  constructor(private route: ActivatedRoute,
+              private IPCService: IPCService,
+              private AccountIconService: AccountIconService,
+              private NotificationService: NotificationService) {
     this.transactions = [];
+    const pageIndex = 0;
+    const pageSize = 5;
+
+    this.paginatorConfig = null;
+
     this.displayedColumns = ['from', 'to', 'amount'];
     this.transactionDatabase = new TransactionDatabase();
     this.dataSource = new TransactionDataSource(this.transactionDatabase);
+
 
   }
 
@@ -50,6 +61,12 @@ export class AccountComponent implements OnInit {
 
   public labelRemovedSnackbar() {
     this.NotificationService.addressLabelRemoved();
+  }
+
+  public paginatorEvent(event) {
+    this.paginatorConfig.pageIndex = event.pageIndex;
+    this.paginatorConfig.pageSize = event.pageSize;
+    this.transactionDatabase.dataChange.next(this.transactions);
   }
 
   public saveLabel(address, label) {
@@ -89,7 +106,6 @@ export class AccountComponent implements OnInit {
         this.label = this.address.substr(0, 8);
       });
 
-
       this.IPCService.getBalance(this.address).then(balance => {
         this.balance = balance;
       }, error => {
@@ -97,9 +113,9 @@ export class AccountComponent implements OnInit {
       });
 
       this.IPCService.getTransactionsByAddress(this.address).then((transactions: Transaction[]) => {
-        console.log('Transactions by address ' + this.address + ' : ', transactions);
         this.transactions = transactions;
-        this.transactionDatabase.updateData(transactions)
+        this.transactionDatabase.updateData(transactions);
+        this.paginatorConfig = new PaginatorConfig(0, 5, transactions.length);
       }, error => {
         this.NotificationService.notificate("Could not get transactions by account: " + error);
       })
@@ -153,27 +169,13 @@ export class TransactionDataSource extends DataSource<any> {
         if (!this.paginator) {
           observer.next(transactions.slice(0, 5));
         } else {
-          const data = this._transactionDatabase.data.slice();
-
-          // Grab the page's slice of data.
-          const startIndex = this.paginator.pageIndex * (this.paginator.pageSize);
-          return data.splice(startIndex, this.paginator.pageSize);
+          let startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+          let endIndex = startIndex + this.paginator.pageSize;
+          observer.next(transactions.slice(startIndex, endIndex));
         }
       })
     })
 
-    /* const displayDataChanges = [
-       this._transactionDatabase.dataChange,
-       this._paginator ? this._paginator.page : 0,
-     ];
-
-     return Observable.merge(...displayDataChanges).map(() => {
-       const data = this._transactionDatabase.data.slice();
-
-       // Grab the page's slice of data.
-       const startIndex = this._paginator ? this._paginator.pageIndex : 0 * (this._paginator ? this._paginator.pageSize : 0);
-       return data.splice(startIndex, this._paginator ? this._paginator.pageSize : 0);
-     });*/
   }
 
   disconnect() {

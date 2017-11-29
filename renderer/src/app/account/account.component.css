@@ -2,19 +2,19 @@
   margin: 0 auto;
   padding-top: 50px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  height: 100%;
   width: 100%;
   text-align: left;
 }
 
 .heading-container {
-  display: inline-flex;
+  display: flex;
   padding-left: 50px;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
 .address-info {
+  opacity: 0.9;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
@@ -23,11 +23,11 @@
 }
 
 .address {
-  font-size: 110%;
+  font-size: 15pt;
 }
 
 .balance {
-
+  padding-top: 15px;
 }
 
 .label {
@@ -36,8 +36,42 @@
 .transactions {
   margin: 0 auto;
   width: 90%;
+  padding-bottom: 50px;
 }
 
 .img_container img {
   border-radius: 50px;
+}
+
+.no_txs {
+  padding: 100px;
+  text-align: center
+}
+
+.no_txs > span {
+  font-size: 20pt;
+  opacity: 0.9;
+}
+
+
+/*https://github.com/angular/material2/issues/6058#issuecomment-318612278*/
+.mat-table {
+  display: table;
+  width: 100%;
+}
+
+.mat-table > .mat-header-row, .mat-table > .mat-row {
+  display: table-row;
+  padding: 0;
+  border: none;
+}
+
+.mat-table > .mat-header-row > .mat-header-cell,
+.mat-table > .mat-row > .mat-cell {
+  display: table-cell;
+  height: 48px;
+  vertical-align: middle;
+  padding: 0 0.5em 0 20px;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }

@@ -1,5 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Observable} from "rxjs/Observable";
+import {Injectable} from '@angular/core';
 import {Subject} from "rxjs/Subject";
 import * as sha1 from 'sha1';
 

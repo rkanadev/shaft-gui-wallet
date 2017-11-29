@@ -1,3 +1,12 @@
 .create_account_dialog {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.password_not_match {
+  display: flex;
+  align-items: center
+}
+
+.password_not_match > span{
+  padding-left: 10px;
+}

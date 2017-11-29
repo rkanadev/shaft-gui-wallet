@@ -1,12 +1,9 @@
-import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {debug} from "util";
+import {Component, Inject, OnInit} from '@angular/core';
 import {UnitConvertWeiToEther} from "../util/pipes/unit-converter-pipe";
 import {IPCService} from "../service/ipc/concrete/ipc.service";
 import {Transaction} from "../model/Transaction";
 import {NotificationService} from "../service/notification/notification.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {CreateAccountDialog} from "../accounts/accounts.component";
 import BigNumber from "bignumber.js";
 import {DecimalPipe} from "@angular/common";
 

@@ -1,18 +1,12 @@
 .home {
-  /*  height: 100%;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    display: flex;
-    padding-top: 20px;
-    padding-bottom: 0px;
-    text-align: left;
-    justify-content: space-between;*/
-
-  height: 100%;
+  height: calc(100vh - 128px);
   padding: 10px;
   text-align: center;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
   font-family: Roboto, "Helvetica Neue", sans-serif;;
 }
 
@@ -35,7 +29,6 @@
   opacity: 0.9;
   padding: 10px;
   left: 0;
-  height: 80vh;
   text-align: center;
   display: flex;
   flex-wrap: wrap;
