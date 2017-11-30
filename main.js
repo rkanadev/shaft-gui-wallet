@@ -22,7 +22,7 @@ function createWindow() {
     app.init().then(() => {
         logger.info("Shaft GUI Wallet initialized");
         // Create the browser window.
-        mainWindow = new BrowserWindow({width: 1000, height: 800, frame: false, center: true});
+        mainWindow = new BrowserWindow({width: 1100, height: 800, frame: false, center: true});
         // and load the index.html of the app.
         if (isDev) {
             mainWindow.loadURL("http://127.0.0.1:4200");

@@ -1,8 +1,8 @@
 'use strict';
 const {createLogger, format, transports} = require('winston');
 const {combine, timestamp, label, printf} = format;
-const appConfig = require('../config/appConfig.json');
-const logLevel = appConfig.log.level;
+const defaultLogLevel = 'info';
+let logLevel = defaultLogLevel;
 
 let loggers = [];
 
@@ -13,7 +13,7 @@ const myFormat = printf(info => {
 
 module.exports = {
     initFileLogger: function (pathToLogFile) {
-        loggers.forEach((logger)=> logger.add(new transports.File({filename: pathToLogFile, level: 'silly'})))
+        loggers.forEach((logger) => logger.add(new transports.File({filename: pathToLogFile, level: logLevel})))
     },
     getLogger: function (loggerName) {
         let logger = createLogger({
@@ -28,5 +28,9 @@ module.exports = {
         });
         loggers.push(logger);
         return logger;
+    },
+    changeLogLevel: function (_logLevel) {
+        logLevel = _logLevel;
+        loggers.forEach(logger => logger.transports.forEach(transport => transport.level = logLevel));
     }
 };

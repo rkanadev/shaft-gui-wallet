@@ -21,7 +21,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     this.blockNumber = 0;
     this.peerCount = 0;
 
-    this.tickSubscription = Observable.interval(1000 * 10).startWith(1)
+    this.tickSubscription = Observable.interval(500 * 1).startWith(1)
       .subscribe(() => {
         this.tick();
       });

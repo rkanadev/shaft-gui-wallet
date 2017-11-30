@@ -5,6 +5,9 @@ const platform = os.platform();
 
 let paths;
 
+
+//Yeah, i know about path.join, will refactor later
+
 function init() {
     let homeDir = null;
     let shaftGUIDir = null;

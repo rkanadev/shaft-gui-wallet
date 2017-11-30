@@ -5,8 +5,10 @@ const platform = os.platform();
 const pathsService = require('./paths-service');
 const fs = require('fs');
 const jsonfile = require('jsonfile');
+const loggerFactory = require('../util/logger');
 const logger = require('../util/logger').getLogger("ConfigService");
 const mkdirp = require('mkdirp');
+const defaultAppConfig = require('../config/defaultAppConfig.json');
 const configPath = pathsService.getConfigPath();
 let _config;
 
@@ -26,7 +28,8 @@ function init() {
 
 
 function readConfig() {
-    _config = jsonfile.readFileSync(configPath)
+    _config = jsonfile.readFileSync(configPath);
+    loggerFactory.changeLogLevel(_config.log.level);
     logger.silly("App config: " + JSON.stringify(_config));
 }
 
@@ -37,13 +40,13 @@ function isConfigExists() {
 
 function createConfig() {
     logger.silly(`Creating config in path ${configPath}`);
-    jsonfile.writeFileSync(configPath, {})
+    jsonfile.writeFileSync(configPath, defaultAppConfig)
 }
 
 function getConfig() {
     if(!_config){
-        logger.error("Config is not initialized yet! Returning empty config ({})")
-        return {}
+        logger.error("Config is not initialized yet! Returning default: " + defaultAppConfig);
+        return defaultAppConfig;
     }
     return _config;
 }
@@ -62,7 +65,6 @@ function writeConfig(config) {
 }
 
 function saveAddressLabel(address, label) {
-    console.log(_config);
     return new Promise((resolve, reject) => {
         if(!_config){
             reject("Config is not initialized yet!");

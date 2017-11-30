@@ -84,7 +84,6 @@ export class HomeComponent implements OnInit {
         txs.forEach((tx) => {
           if (
             Object.keys(this.accounts).some((acc) => {
-              console.log('Added for received:' + tx.value / 1000000000000000000);
               let bool = acc === tx.to;
 
               if (!recv[tx.hash] && bool) {
@@ -177,7 +176,9 @@ export class HomeComponent implements OnInit {
         });
       }
     });
-    return result;
+    return result.sort(function (a, b) {
+      return b.blockNumber - a.blockNumber;
+    });
   }
 
 

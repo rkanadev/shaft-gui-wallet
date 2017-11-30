@@ -12,14 +12,16 @@ const procHolder = require('../util/procHolder');
 const _ = require('underscore');
 const version = require('./../../package.json').version;
 let sender;
+let _explorerAddress;
 
 function init(proc) {
     logger.debug("Initializing config service");
-    configService.init();
     logger.info("Initializing IPC layer");
+    let config = configService.getConfig();
+    _explorerAddress = config.testnet ? "https://testnet.explorer.shaft.sh" : "https://explorer.shaft.sh";
     electron.ipcMain.on('web3-req-channel', (event, arg) => {
         sender = event.sender;
-        //console.log('IPC: Request from client', event, arg);
+        logger.silly('IPC: Request from client', event, arg);
         logger.silly('Message from web3-req-channel:' + JSON.stringify(arg));
         let result = requestDecoder(arg.data).then((result) => {
             let resultBody = {id: arg.id, result: result};
@@ -226,7 +228,7 @@ function getAccounts() {
 
 function getTransactionByAddress(address) {
     return new Promise((resolve, reject) => {
-        fetch('https://testnet.explorer.shaft.sh/api/address/' + address)
+        fetch(_explorerAddress + '/api/address/' + address)
             .then(res => res.json())
             .then(json => {
                     let transactions = json.transactions;
@@ -302,7 +304,7 @@ function sendTransaction(transactionData) {
         }
 
         //todo validate
-        transactionData.extraData = "Sent from Shaft-GUI v alpha-" + version;
+        transactionData.extraData = "";
         web3.eth.sendTransaction(transactionData, function (err, receipt) {
             if (err) {
                 reject(err);
@@ -401,7 +403,7 @@ function getMinedBlocks() {
                     let minedBlocks = [];
                     accounts.forEach((account) => {
                         promises.push(new Promise((resolvee, rejectt) => {
-                            fetch('https://testnet.explorer.shaft.sh/api/address/' + account + '/mined')
+                            fetch(_explorerAddress + '/api/address/' + account + '/mined')
                                 .then(res => res.json())
                                 .then(json => {
                                         minedBlocks.push(json)

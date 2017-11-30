@@ -17,7 +17,7 @@
         <mat-form-field [style.width]="'100%'" class="send-form_field">
           <input matInput placeholder="Amount" name="value" formControlName="value" type="number">
         </mat-form-field>
-        <div *ngIf="form.controls.to.dirty" style="display:flex;align-items: center">
+        <div *ngIf="form.controls.to.dirty && form.controls.to.invalid" style="display:flex;align-items: center">
           <mat-icon>error_outline</mat-icon>
           <span style="padding-left:10px;padding-bottom:10px">Receiver address does not look like a valid SHF address</span>
         </div>
