@@ -1,23 +1,25 @@
 <div class="create_account_dialog">
   <h1 mat-dialog-title>Create new account</h1>
   <div mat-dialog-content>
-    <p>Don't use weak passwords. Always remember password</p>
+    <span>Don't use weak passwords.</span>
+    <p>If you lose your password, the coins will be unrecoverable.</p>
     <mat-form-field>
-      <input id="password"     type="password" matInput tabindex="1" placeholder="Enter password" value="Password"
+      <input id="password" type="password" matInput tabindex="1" placeholder="Enter password" value="Password"
              [(ngModel)]="password">
     </mat-form-field>
     <mat-form-field>
       <input id="password_confirm" type="password" matInput tabindex="2" placeholder="Repeat password"
              value="Password confirmation" [(ngModel)]="passwordConfirm">
     </mat-form-field>
+    <div class="password_not_match" *ngIf="password != passwordConfirm">
+      <mat-icon>error_outline</mat-icon>
+      <span>Passwords does not match</span>
+    </div>
   </div>
   <div mat-dialog-actions>
-    <div *ngIf="password != passwordConfirm">Passwords does not match</div>
-    <p>
-      <button mat-button [mat-dialog-close]="password" tabindex="2" [disabled]="password != passwordConfirm">Ok
-      </button>
-      <button mat-button (click)="onNoClick()" tabindex="-1">No Thanks</button>
-    </p>
+        <div>
+          <button mat-button [mat-dialog-close]="password" tabindex="2" [disabled]="password != passwordConfirm">Ok</button>
+          <button mat-button (click)="onNoClick()" tabindex="-1">No Thanks</button>
+        </div>
   </div>
-
 </div>

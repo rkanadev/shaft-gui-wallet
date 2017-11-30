@@ -1,5 +1,16 @@
 <div class="accounts">
-  <div *ngIf="getAccountsAsArray().length === 0">You have not created accounts yet.</div>
+  <div class="flex-column no_accounts" style="text-align: left" *ngIf="getAccountsAsArray().length === 0">
+    <span>No accounts</span>
+    <img src="assets/images/logo.png"/>
+    <span>Lets create your first address</span>
+    <div>
+      <p>
+        <button (click)="openCreateAccountDialog()" mat-raised-button mat-button="primary" color="primary">
+          Create account
+        </button>
+      </p>
+    </div>
+  </div>
   <div *ngIf="getAccountsAsArray().length > 0" class="accounts_list">
     <ul>
       <li *ngFor="let account of getAccountsAsArray();let i = index">
@@ -25,12 +36,5 @@
         </mat-card>
       </li>
     </ul>
-  </div>
-  <div>
-    <p>
-      <button (click)="openCreateAccountDialog()" mat-raised-button mat-button="primary" color="primary">
-        Create account
-      </button>
-    </p>
   </div>
 </div>

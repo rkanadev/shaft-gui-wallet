@@ -1,35 +1,42 @@
 <div class="send">
-  <div *ngIf="accounts.length > 0">
+  <div *ngIf="getAccountsWithNonZeroBalance().length > 0">
     <form novalidate class="send-form" [formGroup]="form">
-      <span style="text-align: center"><p>Spend some shafts</p></span>
-      <mat-form-field [style.width]="'100%'" class="send-form_field">
-        <mat-select placeholder="Choose from" formControlName="from" name="from">
-          <mat-option *ngFor="let account of accounts" [value]="account">
-            {{account}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <mat-card>
+        <mat-form-field [style.width]="'100%'" class="send-form_field">
+          <mat-select placeholder="Choose from" formControlName="from" name="from">
+            <mat-option *ngFor="let account of getAccountsWithNonZeroBalance()" [value]="account.address">
+              {{account.address}} <i>[{{formatBalance(account.balance, 2)}} SHF]</i>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field [style.width]="'100%'" class="send-form_field">
-        <input matInput placeholder="To" name="to" formControlName="to" type="text">
-      </mat-form-field>
+        <mat-form-field [style.width]="'100%'" class="send-form_field">
+          <input matInput placeholder="To" name="to" formControlName="to" type="text">
+        </mat-form-field>
 
-      <mat-form-field [style.width]="'100%'" class="send-form_field">
-        <input matInput placeholder="Amount" name="value" formControlName="value" type="number">
-      </mat-form-field>
-      <div>
-        <p>
-          <button [disabled]="form.invalid" (click)="openSendDialog()" mat-raised-button mat-button="primary"
-                  color="primary">Send
-          </button>
-          <!--
-                    <button style="background-color: #64b4ed" (click)="advanced=!advanced" mat-raised-button mat-button="primary" color="primary">Advanced</button>
-          -->
-        </p>
-      </div>
+        <mat-form-field [style.width]="'100%'" class="send-form_field">
+          <input matInput placeholder="Amount" name="value" formControlName="value" type="number">
+        </mat-form-field>
+        <div *ngIf="form.controls.to.dirty" style="display:flex;align-items: center">
+          <mat-icon>error_outline</mat-icon>
+          <span style="padding-left:10px;padding-bottom:10px">Receiver address does not look like a valid SHF address</span>
+        </div>
+        <div>
+          <p>
+            <button [disabled]="form.invalid" (click)="openSendDialog()" mat-raised-button mat-button="primary"
+                    color="primary">Send
+            </button>
+            <!--
+                      <button style="background-color: #64b4ed" (click)="advanced=!advanced" mat-raised-button mat-button="primary" color="primary">Advanced</button>
+            -->
+          </p>
+        </div>
+      </mat-card>
     </form>
   </div>
-  <div *ngIf="accounts.length ==  0">
-    No accounts created
+  <div *ngIf="getAccountsWithNonZeroBalance().length  == 0" class="flex-column no_accounts">
+    <span>No accounts with non-zero balance found</span>
+    <img src="assets/images/mine.png"/>
+    <span> Mine some shafts and spend it.</span>
   </div>
 </div>

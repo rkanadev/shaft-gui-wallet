@@ -58,3 +58,16 @@
   background-color: #651FFF;
   color:white;
 }
+
+.no_accounts {
+  height: calc((100vh - 128px));
+  justify-content: center;
+  align-items: center;
+  font-size: 22pt;
+  opacity: 0.9;
+}
+
+.no_accounts img {
+  height: 200px;
+  padding:50px;
+}

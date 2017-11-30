@@ -13,20 +13,20 @@
 
       <div class="address">
         <span><b>{{address}}</b></span></div>
-      <span class="balance"><b>Balance:{{balance | weiToEther}} SHF</b></span>
+      <span class="balance"><b>{{balance | weiToEther}} SHF</b></span>
     </div>
   </div>
 
   <div class="transactions">
-    <div *ngIf="transactions.length === 0">
-      <p>No transactions found on this address</p>
+    <div *ngIf="transactions.length === 0" class="no_txs">
+      <span>No transactions related to this account found</span>
     </div>
 
     <div *ngIf="transactions.length > 0">
       <h2>Transactions</h2>
       <div class="example-container mat-elevation-z8">
 
-        <div *ngIf="paginator">
+        <div *ngIf="paginator && paginatorConfig">
           <mat-table #table [dataSource]="dataSource">
 
             <!--- Note that these columns can be defined in any order.
@@ -68,12 +68,12 @@
 
           </mat-table>
         </div>
-
         <mat-paginator #paginator
-                       [length]="transactionDatabase.data.length"
-                       [pageIndex]="0"
-                       [pageSize]="5"
-                       [pageSizeOptions]="[5]">
+                       [length]="paginatorConfig.length"
+                       [pageIndex]="paginatorConfig.pageIndex"
+                       [pageSize]="paginatorConfig.pageSize"
+                       [pageSizeOptions]="[5,10,25,50,100]"
+                       (page)="paginatorEvent($event)">
         </mat-paginator>
       </div>
     </div>

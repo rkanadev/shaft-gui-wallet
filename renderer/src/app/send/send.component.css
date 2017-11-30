@@ -1,24 +1,41 @@
 .send {
-  height: 100%;
+  height: calc(100vh - 128px);
   margin: 0 auto;
-  padding: 50px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .send-title {
-  padding-left:50px;
+  padding-left: 50px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .send-form {
-  width: 50%;
+  width: 60%;
   margin: 0 auto;
 }
 
 .send-form_field {
-  padding-right:50px
+  padding-right: 50px
 }
 
 .mat-select-panel {
   max-width: 400px !important;
+}
+
+.no_accounts {
+  height: calc((100vh - 128px));
+  justify-content: center;
+  align-items: center;
+  font-size: 22pt;
+  opacity: 0.9;
+}
+
+.no_accounts img {
+  height: 200px;
+  padding: 50px;
 }

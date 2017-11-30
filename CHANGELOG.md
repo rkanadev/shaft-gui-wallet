@@ -14,3 +14,9 @@
 1. Fix for broken templating in dashboard
 2. Fix for create acccount button
 3. Decreased time for qutting app
+
+### v0.0.5 
+1. Many changes in UI
+2. Fixed transaction table
+3. Fixed many UI problems
+

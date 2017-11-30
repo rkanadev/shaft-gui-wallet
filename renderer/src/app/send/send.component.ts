@@ -1,10 +1,11 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import BigNumber from "bignumber.js";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import {CreateAccountDialog} from "../accounts/accounts.component";
 import {NotificationService} from "../service/notification/notification.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IPCService} from "../service/ipc/concrete/ipc.service";
+import {AccountInfo} from "../model/AccountInfo";
 
 @Component({
   selector: 'app-send',
@@ -14,7 +15,7 @@ import {IPCService} from "../service/ipc/concrete/ipc.service";
 })
 export class SendComponent implements OnInit {
 
-  private accounts: string[];
+  private accounts: AccountInfo[];
   private from: string;
   private to: string;
   private value: number;
@@ -22,27 +23,53 @@ export class SendComponent implements OnInit {
   private form: FormGroup;
   private error: boolean;
 
-  constructor(private IPCService: IPCService, public dialog: MatDialog, private fb: FormBuilder, private NotificationService:NotificationService) {
+  constructor(private IPCService: IPCService, public dialog: MatDialog, private fb: FormBuilder, private NotificationService: NotificationService) {
     this.from = null;
     this.to = null;
     this.value = null;
 
     this.accounts = [];
     IPCService.getAccounts().then((accounts) => {
-      this.accounts = accounts;
+      accounts.forEach((account) => {
+        let accountInfo = new AccountInfo();
+        accountInfo.address = account;
+        this.accounts.push(accountInfo);
+
+        this.IPCService.getBalance(account).then((balance) => {
+          let fromCache = this.accounts.find(accInfo => accInfo.address == account);
+          if (fromCache) {
+            fromCache.balance = balance;
+          } else {
+            let obj = new AccountInfo();
+            obj.address = account;
+            obj.balance = balance;
+            this.accounts.push(obj);
+          }
+        }, err => {
+          this.NotificationService.notificate("Could not get balance for address: " + err);
+        });
+      })
     }, err => {
       this.NotificationService.notificate("Could not account list: " + err);
-    })
+    });
 
-
-  }
-
-  ngOnInit() {
     this.form = this.fb.group({
       from: ['', Validators.required],
       to: ['', [Validators.required, Validators.pattern(/^(0x)([0-9a-z]{40,40})+$/)]],
       value: ['', Validators.required]
     });
+  }
+
+  public formatBalance(balance, digitsAfterPoint) {
+    return Math.round((balance / 1000000000000000000) * 10 * digitsAfterPoint) / 10 * digitsAfterPoint;
+  }
+
+  public getAccountsWithNonZeroBalance() {
+    return this.accounts.filter(account => account.balance && account.balance > 0);
+  }
+
+  ngOnInit() {
+
   }
 
   openSendDialog(): void {
@@ -84,7 +111,7 @@ export class SendComponent implements OnInit {
       console.log('Not enough arguments to send transaction');
       return;
     }
-    let from = this.form.controls.from.value ;
+    let from = this.form.controls.from.value;
     let to = this.form.controls.to.value
     let value = this.form.controls.value.value;
     let valueInWei = new BigNumber(value).mul(new BigNumber(1000000000000000000));
@@ -160,5 +187,6 @@ export class SendDialog {
     this.data.password = null;
     this.dialogRef.close();
   }
+
 
 }
