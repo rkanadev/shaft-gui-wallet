@@ -20,3 +20,12 @@
 2. Fixed transaction table
 3. Fixed many UI problems
 
+### v0.0.5 
+1. Many changes in UI
+2. Fixed transaction table
+3. Fixed many UI problems
+
+### v0.0.6
+1. Few UI fixes
+2. Changed default config to mainnet
+
