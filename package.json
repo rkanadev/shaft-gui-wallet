@@ -1,6 +1,6 @@
 {
   "name": "shaft-gui-wallet",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Shaft GUI wallet",
   "main": "./main.js",
   "scripts": {

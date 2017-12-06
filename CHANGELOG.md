@@ -29,3 +29,6 @@
 1. Few UI fixes
 2. Changed default config to mainnet
 
+### v0.0.7
+1. Fixed account balance on send page
+
