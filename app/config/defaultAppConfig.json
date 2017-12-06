@@ -2,6 +2,6 @@
   "log": {
     "level": "info"
   },
-  "testnet" : true,
+  "testnet" : false,
   "rpc" : false
 }

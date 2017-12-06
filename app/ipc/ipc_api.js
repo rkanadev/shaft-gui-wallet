@@ -304,7 +304,7 @@ function sendTransaction(transactionData) {
         }
 
         //todo validate
-        transactionData.extraData = "";
+        transactionData.extraData = "Sent from Shaft-GUI v" + version;
         web3.eth.sendTransaction(transactionData, function (err, receipt) {
             if (err) {
                 reject(err);
