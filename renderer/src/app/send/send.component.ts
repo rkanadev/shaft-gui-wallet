@@ -61,7 +61,7 @@ export class SendComponent implements OnInit {
   }
 
   public formatBalance(balance, digitsAfterPoint) {
-    return Math.round((balance / 1000000000000000000) * 10 * digitsAfterPoint) / 10 * digitsAfterPoint;
+    return Math.round((balance / 1000000000000000000) * Math.pow(10, digitsAfterPoint)) / Math.pow(10, digitsAfterPoint);
   }
 
   public getAccountsWithNonZeroBalance() {
