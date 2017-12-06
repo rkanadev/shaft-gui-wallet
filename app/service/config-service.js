@@ -29,7 +29,9 @@ function init() {
 
 function readConfig() {
     _config = jsonfile.readFileSync(configPath);
-    loggerFactory.changeLogLevel(_config.log.level);
+    //TODO fix it
+    let level = _config.log.level || 'info';
+    loggerFactory.changeLogLevel(level);
     logger.silly("App config: " + JSON.stringify(_config));
 }
 
