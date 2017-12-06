@@ -6,6 +6,7 @@ import {NotificationService} from "../service/notification/notification.service"
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import BigNumber from "bignumber.js";
 import {DecimalPipe} from "@angular/common";
+import {AccountIconService} from "../service/account-icon/account-icon.service";
 
 
 @Component({
@@ -84,7 +85,6 @@ export class HomeComponent implements OnInit {
         txs.forEach((tx) => {
           if (
             Object.keys(this.accounts).some((acc) => {
-              console.log('Added for received:' + tx.value / 1000000000000000000);
               let bool = acc === tx.to;
 
               if (!recv[tx.hash] && bool) {
@@ -177,7 +177,9 @@ export class HomeComponent implements OnInit {
         });
       }
     });
-    return result;
+    return result.sort(function (a, b) {
+      return b.blockNumber - a.blockNumber;
+    });
   }
 
 
@@ -223,18 +225,23 @@ export class HomeComponent implements OnInit {
 @Component({
   selector: 'transaction-details-dialog',
   templateUrl: 'transaction-details-dialog.html',
-  styleUrls: ['./transaction-details-dialog.css']
+  styleUrls: ['./transaction-details-dialog.css'],
+  providers: [AccountIconService]
 })
 export class TransactionDetailsDialog {
   transaction: any;
 
   constructor(public dialogRef: MatDialogRef<TransactionDetailsDialog>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
+              @Inject(MAT_DIALOG_DATA) public data: any, private AccountIconService: AccountIconService) {
     this.transaction = data.transaction;
   }
 
   submitTransactionDetailsDialog() {
     this.dialogRef.close();
+  }
+
+  getAddressIconBase64(address) {
+    return this.AccountIconService.getIconBase64(address);
   }
 
   onNoClick(): void {

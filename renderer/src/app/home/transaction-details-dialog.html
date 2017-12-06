@@ -2,15 +2,31 @@
   <h1 mat-dialog-title>{{transaction.hash}}</h1>
   <div mat-dialog-content>
 
+    <div *ngIf="transaction.from && transaction.to">
+      <div class="from-to">
+        <div class="from-to_item">
+          <img src="{{getAddressIconBase64(transaction.from)}}">
+          <span>{{transaction.from.substr(0,18)}}...</span>
+        </div>
+        <span class="from-to_item">
+           <mat-icon style="font-size: 40pt;height: auto;width: auto">trending_flat</mat-icon>
+        </span>
+        <div class="from-to_item">
+          <img src="{{getAddressIconBase64(transaction.to)}}">
+          <span>{{transaction.to.substr(0,18)}}...</span>
+        </div>
+      </div>
+    </div>
+
     <div class="transaction_container">
-      <span>Hash: <span>{{transaction.hash}}</span></span>
-      <span>Block hash: <span>{{transaction.blockHash}}</span></span>
-      <span>Block number: <span>{{transaction.blockNumber}}</span></span>
-      <span>From: <span>{{transaction.from}}</span></span>
-      <span>To: <span>{{transaction.to}}</span></span>
-      <span>Amount: <span>{{fromBigNumberToDecimal(transaction.value)}}</span></span>
-      <span>Gas: <span>{{transaction.gas}}</span></span>
-      <span>Gas price: <span>{{transaction.gasPrice}}</span></span>
+      <span class="tx-item">Hash: <span>{{transaction.hash}}</span></span>
+      <span class="tx-item">Block hash: <span>{{transaction.blockHash}}</span></span>
+      <span class="tx-item">Block number: <span>{{transaction.blockNumber}}</span></span>
+      <span class="tx-item">From: <span>{{transaction.from}}</span></span>
+      <span class="tx-item">To: <span>{{transaction.to}}</span></span>
+      <span class="tx-item">Amount: <span>{{fromBigNumberToDecimal(transaction.value)}}</span></span>
+      <span class="tx-item">Gas: <span>{{transaction.gas}}</span></span>
+      <span class="tx-item">Gas price: <span>{{transaction.gasPrice}}</span></span>
     </div>
   </div>
   <div mat-dialog-actions>

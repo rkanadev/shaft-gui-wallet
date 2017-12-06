@@ -22,7 +22,6 @@
 }
 
 .toolbar-container {
-  background-color: #651FFF;
   width: 100%;
   -webkit-app-region: drag;
   height: 100%;
@@ -85,8 +84,9 @@
 .button_active {
   background-color: white;
   border-radius: 0;
-  color: #651FFF;
+  color: #1976d2;
 }
+
 
 .menu-container {
   display: flex;
