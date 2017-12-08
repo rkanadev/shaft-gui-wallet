@@ -17,7 +17,7 @@ import {
   MatProgressSpinnerModule,
   MatSelectModule,
   MatSidenavModule, MatSnackBarModule, MatTableModule,
-  MatToolbarModule
+  MatToolbarModule, MatTooltipModule
 } from "@angular/material";
 import {SidenavComponent} from './sidenav/sidenav.component';
 import {AccountsComponent, CreateAccountDialog} from './accounts/accounts.component';
@@ -76,6 +76,7 @@ const appRoutes: Routes = [
     MatTableModule,
     MatExpansionModule,
     MatSnackBarModule,
+    MatTooltipModule,
   ],
   exports: [
     MatButtonModule,

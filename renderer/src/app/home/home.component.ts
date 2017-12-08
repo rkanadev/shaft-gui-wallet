@@ -75,25 +75,20 @@ export class HomeComponent implements OnInit {
   }
 
   public getReceived() {
-    // {hashTx : received, ...}
-
     let recv = {};
 
     Object.keys(this.accounts).forEach((account) => {
       if (this.accounts[account].transactions) {
         let txs = this.accounts[account].transactions;
         txs.forEach((tx) => {
-          if (
-            Object.keys(this.accounts).some((acc) => {
+            Object.keys(this.accounts).forEach((acc) => {
               let bool = acc === tx.to;
 
               if (!recv[tx.hash] && bool) {
                 recv[tx.hash] = tx.value / 1000000000000000000;
               }
               return bool;
-            })) {
-          }
-
+            })
         })
       }
     });
@@ -103,7 +98,7 @@ export class HomeComponent implements OnInit {
       result += recv[tx];
     });
 
-    return result;
+    return Math.round(result * 10000) / 10000;
   }
 
   public getSent() {
@@ -113,15 +108,13 @@ export class HomeComponent implements OnInit {
       if (this.accounts[account].transactions) {
         let txs = this.accounts[account].transactions;
         txs.forEach((tx) => {
-          if (
-            Object.keys(this.accounts).some((acc) => {
+            Object.keys(this.accounts).forEach((acc) => {
               let bool = acc === tx.from;
               if (!sent[tx.hash] && bool) {
                 sent[tx.hash] = tx.value / 1000000000000000000;
               }
               return bool;
-            })) {
-          }
+            })
 
         })
       }
@@ -180,6 +173,11 @@ export class HomeComponent implements OnInit {
     return result.sort(function (a, b) {
       return b.blockNumber - a.blockNumber;
     });
+  }
+
+  //TODO DUPLICATED
+  public formatBalance(balance, digitsAfterPoint, unit) {
+    return Math.round((balance / 1000000000000000000) * Math.pow(10, digitsAfterPoint)) / Math.pow(10, digitsAfterPoint);
   }
 
 
@@ -248,8 +246,9 @@ export class TransactionDetailsDialog {
     this.dialogRef.close();
   }
 
-  fromBigNumberToDecimal(bigNumber) {
-    return new BigNumber(bigNumber).toString(10);
+  //TODO DUPLICATED
+  public formatBalance(balance, digitsAfterPoint, unit) {
+    return Math.round((balance / 1000000000000000000) * Math.pow(10, digitsAfterPoint)) / Math.pow(10, digitsAfterPoint);
   }
 
 }

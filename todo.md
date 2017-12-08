@@ -1,5 +1,5 @@
-1) push blocks & transaction in notificationservice
-2) Fix startup before web3 connected
-3) Close node before close
-4) spend button in account
-5) fix transactions style in account
+1) spend button in account
+2) Move all calculations from wei to eth in separate service
+
+
+

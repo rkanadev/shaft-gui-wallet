@@ -1,7 +1,4 @@
-const buildsConfig = require('../config/builds.json');
-const homeDir = process.env.HOME;
 const os = require('os');
-const platform = os.platform();
 const pathsService = require('./paths-service');
 const fs = require('fs');
 const jsonfile = require('jsonfile');
@@ -13,7 +10,7 @@ const configPath = pathsService.getConfigPath();
 let _config;
 
 function init() {
-    let exists = fs.existsSync(configPath);
+    let exists = isConfigExists();
     if (!exists) {
         logger.info("Config file does not exists, creating default");
         logger.silly(`Writing default config file to ${configPath}`);
