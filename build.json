@@ -1,5 +1,8 @@
 {
   "appId": "shaft.sh.shaft-gui-wallet",
+  "directories": {
+    "buildResources": "build"
+  },
   "win": {
     "target": [
       {
