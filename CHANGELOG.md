@@ -32,3 +32,6 @@
 ### v0.0.7
 1. Fixed account balance on send page
 
+### v0.0.8
+1. Added icons in build
+
