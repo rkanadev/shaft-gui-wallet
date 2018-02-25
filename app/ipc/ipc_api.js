@@ -11,6 +11,7 @@ const window = require('../util/window');
 const procHolder = require('../util/procHolder');
 const _ = require('underscore');
 const version = require('./../../package.json').version;
+const pushMessageEnum = require('../enum/push-message');
 let sender;
 let _explorerAddress;
 
@@ -66,12 +67,15 @@ function init(proc) {
                             accounts.forEach(account => {
                                 //If we mined block
                                 if (block.miner === account) {
-                                    pushNotification("YAY! Successfully mined block with hash " + block.hash);
+                                    logger.info("YAY! Successfully mined block with hash " + block.hash);
+                                    pushNotification(new PushMessage("MINED_BLOCK"), block.hash);
+                                    //pushNotification("YAY! Successfully mined block with hash " + block.hash);
                                 }
 
                                 block.transactions.forEach((tx) => {
                                     if (tx.to === account) {
-                                        pushNotification("Incoming transaction " + tx.value / 1000000000000000000 + " SHF to address " + account);
+                                        logger.info("Incoming transaction " + tx.value / 1000000000000000000 + " SHF to address " + account);
+                                        pushNotification(new PushMessage("INCOMING_TRANSACTION", [tx.value/1000000000000000000, account]));
                                     }
                                 })
                             });
@@ -354,7 +358,7 @@ function getAddressLabel(address) {
 
 function exitApp(proc) {
     //sorry for exiting outside promise :(
-    if(proc !== null) {
+    if (proc !== null) {
         logger.info("Killing geth process");
         //unloading ipc api
         web3service.haltWeb3();

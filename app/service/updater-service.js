@@ -1,4 +1,4 @@
-const autoUpdater = require("electron-updater").autoUpdater;
+const autoUpdater = require('electron-updater').autoUpdater;
 const logger = require('../util/logger').getLogger("UpdaterService");
 
 function init() {

@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from "@angular/material";
+import {PushNotificationEnum} from "../../enum/push.notification.enum";
 
 declare var electron: any;
 
@@ -10,7 +11,20 @@ export class NotificationService {
 
   constructor(public snackBar: MatSnackBar) {
     this.ipcRenderer.on('push-notification', (event, arg) => {
-      this.notificate(arg);
+      if (!arg.type || !arg.args) {
+        console.log('Error, unrecognized type of push-message: ', arg);
+      }
+      switch (arg.type) {
+        case "MINED_BLOCK" :
+          this.notificate(`YAY! Successfully mined block with hash ${arg.args[0]}`);
+          break;
+        case "INCOMING_TRANSACTION":
+          this.notificate(`Incoming transaction ${arg.args[0]} SHF to address ${arg.args[1]}`);
+          break;
+        default:
+          console.log('Error, unrecognized type of push-message: ', arg);
+          break;
+      }
     })
 
   }
