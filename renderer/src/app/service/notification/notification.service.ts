@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MatSnackBar} from "@angular/material";
-import {PushNotificationEnum} from "../../enum/push.notification.enum";
+import {MatSnackBar} from '@angular/material';
 
 declare var electron: any;
 
@@ -15,24 +14,24 @@ export class NotificationService {
         console.log('Error, unrecognized type of push-message: ', arg);
       }
       switch (arg.type) {
-        case "MINED_BLOCK" :
+        case 'MINED_BLOCK' :
           this.notificate(`YAY! Successfully mined block with hash ${arg.args[0]}`);
           break;
-        case "INCOMING_TRANSACTION":
+        case 'INCOMING_TRANSACTION':
           this.notificate(`Incoming transaction ${arg.args[0]} SHF to address ${arg.args[1]}`);
           break;
         default:
           console.log('Error, unrecognized type of push-message: ', arg);
           break;
       }
-    })
+    });
 
   }
 
 
   private openSnackBar(label, action) {
     if (!action) {
-      action = "";
+      action = '';
     }
     this.snackBar.open(label, action, {
       duration: 5000,
