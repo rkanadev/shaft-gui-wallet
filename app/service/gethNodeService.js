@@ -109,6 +109,9 @@ function startNode(ipcPath, execPath, sha256, nodeLogFile) {
                 bootnodes.push("enode://a6b2c7a2e8c72034d767e749818a8d85c9e693a75138ddb59e005501cd2ccf3688fa8ed50daa2cd8de927fd9dd760f191072032a1f629a4eae528acf1f1c2d25@94.130.105.46:30303");
                 bootnodes.push("enode://f001337f64ef88bc595e5304713fa9148407cee2062ba1de58c5200eda3206d7a9dd715ebe5844fc724d3a31909bcc4bbfbfefe7c6f9536ed969c3362b22939a@94.130.111.226:30303");
 
+                //Explorer
+                bootnodes.push("enode://5ae071feeffa33c73e0bf0a70677e43baa13facb6292c8556465f105e3d9894653707808a19c222ec5c15ec19e45a020d824c63e2f5b1a726a014bb1ae618f75@185.82.200.6:30306");
+
                 args.push('--bootnodes=' + bootnodes.join());
                 logger.info('Starting in network: mainnet');
             }
